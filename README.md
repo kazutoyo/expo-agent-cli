@@ -34,14 +34,15 @@ bun run dev
 
 ### Release workflow
 
-This project follows Conventional Commits and uses `standard-version` to update the CHANGELOG and bump versions automatically.
+This project follows Conventional Commits and uses [`np`](https://github.com/sindresorhus/np) to guide npm publishing.
 
 ```bash
 # 1. Commit your changes (e.g., feat(search): add new filter)
-# 2. Run the release script
+# 2. Ensure CHANGELOG.md is up to date (e.g., via standard-version, if desired)
+# 3. Run the release script and follow the prompts to publish to npm
 bun run release
 
-# 3. Push the generated changes (package.json, CHANGELOG.md) and tags
+# 4. Push the generated changes (package.json, CHANGELOG.md) and tags if np didn't do it
 git push origin <branch> && git push --follow-tags
 ```
 
@@ -159,7 +160,7 @@ expo-agent-cli/
 ### Scripts
 
 ```bash
-# Build for production
+# Build for production (runs publint via postbuild)
 bun run build
 
 # Development mode with watch
