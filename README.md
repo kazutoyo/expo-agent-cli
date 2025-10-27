@@ -26,10 +26,10 @@ expo-agent-cli --help
 expo-agent-cli docs
 
 # Fetch a specific page
-expo-agent-cli docs /guides/routing
+expo-agent-cli docs /versions/latest/sdk/camera
 
 # Pretty-print markdown for terminal reading
-expo-agent-cli docs /guides/routing --pretty
+expo-agent-cli docs /versions/latest/sdk/camera --pretty
 
 # Search documentation
 expo-agent-cli search camera
