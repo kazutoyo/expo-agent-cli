@@ -1,5 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, spyOn } from "bun:test";
 import { Command } from "commander";
-import { describe, it, expect, beforeEach, afterEach, spyOn } from "bun:test";
 import { searchCommand } from "./index.js";
 
 describe("searchCommand", () => {

@@ -1,5 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, mock } from "bun:test";
 import { Command } from "commander";
-import { describe, it, expect, beforeEach, afterEach, mock } from "bun:test";
 
 // Mock fetch
 globalThis.fetch = mock(() =>

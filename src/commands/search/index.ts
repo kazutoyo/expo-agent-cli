@@ -1,9 +1,9 @@
-import type { Command } from "commander";
 import { algoliasearch } from "algoliasearch";
 import chalk from "chalk";
+import type { Command } from "commander";
 import {
-	EXPO_ALGOLIA_APP_ID,
 	EXPO_ALGOLIA_API_KEY,
+	EXPO_ALGOLIA_APP_ID,
 	EXPO_ALGOLIA_INDEX_NAME,
 	getVersionForPath,
 } from "../../utils/constants.js";
