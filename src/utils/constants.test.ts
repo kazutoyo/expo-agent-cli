@@ -1,12 +1,21 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, mock, test } from "bun:test";
 import {
 	EXPO_ALGOLIA_API_KEY,
 	EXPO_ALGOLIA_APP_ID,
 	EXPO_ALGOLIA_INDEX_NAME,
-	extractVersionFromPath,
+	getExpoDocsBaseUrl,
 	getExpoDocsUrl,
-	getVersionForPath,
+	getVersionInfo,
 } from "./constants";
+
+const mockedVersionInfo = {
+	version: "1.0.0",
+	expoVersion: "sdk-54",
+};
+
+mock.module("./constants", () => ({
+	getVersionInfo: () => mockedVersionInfo,
+}));
 
 describe("constants", () => {
 	test("Algolia config is defined", () => {
@@ -15,59 +24,62 @@ describe("constants", () => {
 		expect(EXPO_ALGOLIA_INDEX_NAME).toBe("expo");
 	});
 
-	describe("getExpoDocsUrl", () => {
+	describe("getExpoDocsBaseUrl", () => {
 		test("returns branch URL for explicit SDK version", () => {
-			const url = getExpoDocsUrl("sdk-54");
+			const url = getExpoDocsBaseUrl(getVersionInfo().expoVersion);
 			expect(url).toBe(
-				"https://raw.githubusercontent.com/expo/expo/refs/heads/sdk-54/docs/pages",
+				`https://raw.githubusercontent.com/expo/expo/refs/heads/${
+					getVersionInfo().expoVersion
+				}/docs/pages`,
 			);
 		});
 
-		test("maps latest to main branch", () => {
-			const url = getExpoDocsUrl("latest");
+		test("maps latest to configured Expo version", () => {
+			const url = getExpoDocsBaseUrl("latest");
+			const expectedBranch = getVersionInfo().expoVersion;
 			expect(url).toBe(
-				"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages",
+				`https://raw.githubusercontent.com/expo/expo/refs/heads/${expectedBranch}/docs/pages`,
 			);
 		});
 	});
 
-	describe("extractVersionFromPath", () => {
-		test("extracts sdk version from versioned path", () => {
-			const version = extractVersionFromPath("/versions/v54.0.0/sdk/camera/");
-			expect(version).toBe("sdk-54");
-		});
-
-		test("handles latest path", () => {
-			const version = extractVersionFromPath("/versions/latest/sdk/camera/");
-			expect(version).toBe("latest");
-		});
-
-		test("returns null when version not present", () => {
-			const version = extractVersionFromPath("/guides/routing/");
-			expect(version).toBeNull();
-		});
-	});
-
-	describe("getVersionForPath", () => {
-		test("returns extracted sdk version when available", () => {
-			const version = getVersionForPath(
-				"/versions/v53.0.0/sdk/notifications/",
-				"sdk-54",
+	describe("getExpoDocsUrl", () => {
+		test("normalizes paths without leading slash and .mdx suffix", () => {
+			const url = getExpoDocsUrl(
+				"guides/routing.mdx",
+				getVersionInfo().expoVersion,
 			);
-			expect(version).toBe("sdk-53");
-		});
-
-		test("falls back to default for latest keyword", () => {
-			const version = getVersionForPath(
-				"/versions/latest/sdk/notifications/",
-				"sdk-54",
+			expect(url).toBe(
+				`${getExpoDocsBaseUrl(getVersionInfo().expoVersion)}/guides/routing.mdx`,
 			);
-			expect(version).toBe("sdk-54");
 		});
 
-		test("falls back to default when version missing", () => {
-			const version = getVersionForPath("/workflow/expo-cli/", "sdk-54");
-			expect(version).toBe("sdk-54");
+		test("removes trailing slash while keeping .mdx suffix", () => {
+			const url = getExpoDocsUrl(
+				"/guides/routing/",
+				getVersionInfo().expoVersion,
+			);
+			expect(url).toBe(
+				`${getExpoDocsBaseUrl(getVersionInfo().expoVersion)}/guides/routing.mdx`,
+			);
+		});
+
+		test("replaces latest path segment with configured Expo version", () => {
+			const url = getExpoDocsUrl("/versions/latest/sdk/camera/", "latest");
+			const versionSegment = "v54.0.0";
+
+			const expectedUrl = `${getExpoDocsBaseUrl(
+				"latest",
+			)}/versions/${versionSegment}/sdk/camera.mdx`;
+
+			expect(url).toBe(expectedUrl);
+		});
+
+		test("uses provided SDK version when explicitly passed", () => {
+			const targetVersion = "sdk-55";
+			const url = getExpoDocsUrl("/sdk/camera", targetVersion);
+
+			expect(url).toBe(`${getExpoDocsBaseUrl(targetVersion)}/sdk/camera.mdx`);
 		});
 	});
 });

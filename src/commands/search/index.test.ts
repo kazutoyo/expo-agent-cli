@@ -9,8 +9,7 @@ describe("searchCommand", () => {
 
 	beforeEach(() => {
 		program = new Command();
-		const expoVersion = "sdk-54";
-		searchCommand(program, expoVersion);
+		searchCommand(program);
 
 		consoleLogSpy = spyOn(console, "log").mockImplementation(() => {});
 		consoleErrorSpy = spyOn(console, "error").mockImplementation(() => {});
@@ -78,8 +77,6 @@ describe("searchCommand", () => {
 			expect(parsed.results[0]).toHaveProperty("category");
 			expect(parsed.results[0]).toHaveProperty("url");
 			expect(parsed.results[0]).toHaveProperty("path");
-			expect(parsed.results[0]).toHaveProperty("version");
-			expect(parsed.results[0]).toHaveProperty("docsPath");
 		}
 	}, 10000); // Longer timeout for API call
 

@@ -42,19 +42,7 @@ export const docsCommand = (program: Command, defaultExpoVersion: string) => {
 				if (!path) {
 					url = "https://docs.expo.dev/llms.txt";
 				} else {
-					// Ensure path starts with /
-					if (!path.startsWith("/")) {
-						path = `/${path}`;
-					}
-
-					// Remove trailing slash
-					path = path.replace(/\/$/, "");
-
-					// Remove .mdx extension if provided
-					path = path.replace(/\.mdx$/, "");
-
-					const baseUrl = getExpoDocsUrl(expoVersion);
-					url = `${baseUrl}${path}.mdx`;
+					url = getExpoDocsUrl(path, expoVersion);
 				}
 
 				const response = await fetch(url);

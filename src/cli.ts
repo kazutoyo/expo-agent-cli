@@ -1,32 +1,18 @@
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { Command } from "commander";
 import { docsCommand } from "./commands/docs/index.js";
 import { searchCommand } from "./commands/search/index.js";
 import { versionCommand } from "./commands/version/index.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Read version and expoVersion from package.json
-const packageJsonPath = join(__dirname, "../package.json");
-const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8")) as {
-	version: string;
-	expoVersion?: string;
-};
+import { getVersionInfo } from "./utils/constants.js";
 
 const program = new Command();
 
 program
 	.name("expo-agent-cli")
 	.description("CLI tool for accessing Expo SDK documentation and search")
-	.version(packageJson.version);
-
+	.version(getVersionInfo().version);
 // Register commands
-const expoVersion = packageJson.expoVersion || "main";
-docsCommand(program, expoVersion);
-searchCommand(program, expoVersion);
-versionCommand(program, packageJson.version, expoVersion);
+docsCommand(program, getVersionInfo().expoVersion);
+searchCommand(program);
+versionCommand(program, getVersionInfo().version, getVersionInfo().expoVersion);
 
 program.parse();

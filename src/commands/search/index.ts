@@ -5,7 +5,6 @@ import {
 	EXPO_ALGOLIA_API_KEY,
 	EXPO_ALGOLIA_APP_ID,
 	EXPO_ALGOLIA_INDEX_NAME,
-	getVersionForPath,
 } from "../../utils/constants.js";
 import {
 	cleanHighlight,
@@ -40,7 +39,7 @@ interface AlgoliaHit {
 	};
 }
 
-export const searchCommand = (program: Command, expoVersion: string) => {
+export const searchCommand = (program: Command) => {
 	program
 		.command("search")
 		.description("Search Expo documentation")
@@ -104,25 +103,12 @@ export const searchCommand = (program: Command, expoVersion: string) => {
 					const url = hit.url || "";
 					const urlPath = url ? new URL(url).pathname : "";
 
-					// Extract version from path and convert to branch format
-					const version = getVersionForPath(urlPath, expoVersion);
-
-					// Extract docs path by removing version prefix
-					// e.g., "/versions/v54.0.0/sdk/camera/" -> "/sdk/camera"
-					let docsPath = urlPath;
-					const versionMatch = urlPath.match(/\/versions\/[^/]+(\/.+)/);
-					if (versionMatch?.[1]) {
-						docsPath = versionMatch[1];
-					}
-
 					return {
 						title,
 						highlightedTitle,
 						category,
 						url,
 						path: urlPath,
-						version,
-						docsPath,
 					};
 				});
 
