@@ -167,6 +167,12 @@ bun run dev
 
 # Run tests
 bun test
+
+# Lint source files
+bun run lint
+
+# Format check
+bun run format
 ```
 
 ### Design Principles
