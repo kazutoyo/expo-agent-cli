@@ -1,6 +1,6 @@
 # expo-agent-cli
 
-CLI tool for accessing Expo SDK documentation and search functionality. Inspired by [Hono CLI](https://github.com/honojs/cli).
+CLI tool for searching and fetching Expo documentation from the terminal. Inspired by [Hono CLI](https://github.com/honojs/cli).
 
 ## Features
 
@@ -12,154 +12,44 @@ CLI tool for accessing Expo SDK documentation and search functionality. Inspired
 
 ## Installation
 
-### From Source
+```bash
+npm install -g expo-agent-cli
+```
+
+## Usage
+
+```bash
+# Show help
+expo-agent-cli --help
+
+# Display documentation (defaults to llms.txt when path is omitted)
+expo-agent-cli docs
+
+# Fetch a specific page
+expo-agent-cli docs /guides/routing
+
+# Pretty-print markdown for terminal reading
+expo-agent-cli docs /guides/routing --pretty
+
+# Search documentation
+expo-agent-cli search camera
+
+# Display the Expo SDK version branch
+expo-agent-cli version
+```
+
+## Commands
+
+- `docs [path]` - Display Expo documentation in Markdown format
+- `search <query>` - Search Expo documentation
+- `version` - Show the Expo SDK version branch used by the CLI
+
+## Development
 
 ```bash
 # Install dependencies
 bun install
 
-# Build the CLI
-bun run build
-
-# Run locally
-node dist/cli.js --help
-```
-
-### Development
-
-```bash
-# Watch mode for development
-bun run dev
-```
-
-### Release workflow
-
-This project follows Conventional Commits and uses [`np`](https://github.com/sindresorhus/np) to guide npm publishing.
-
-```bash
-# 1. Commit your changes (e.g., feat(search): add new filter)
-# 2. Ensure CHANGELOG.md is up to date (e.g., via standard-version, if desired)
-# 3. Run the release script and follow the prompts to publish to npm
-bun run release
-
-# 4. Push the generated changes (package.json, CHANGELOG.md) and tags if np didn't do it
-git push origin <branch> && git push --follow-tags
-```
-
-You can validate commit messages with `commitlint`, for example: `bun run commitlint -- --from HEAD~1`.
-
-## Usage
-
-### Commands
-
-#### `docs [path]` - Fetch Expo Documentation
-
-Fetch Expo documentation in Markdown format from GitHub.
-
-```bash
-# Fetch specific documentation page
-expo-agent-cli docs /get-started/introduction
-
-# Fetch with pretty formatting for terminal display
-expo-agent-cli docs /accounts/account-types --pretty
-
-# Support for piping
-echo "/get-started/introduction" | expo-agent-cli docs
-```
-
-**Options:**
-- `-p, --pretty` - Display in human-readable format with ANSI colors
-
-**Examples:**
-```bash
-# Get raw markdown (for AI processing)
-expo-agent-cli docs /guides/routing
-
-# Get formatted output for terminal reading
-expo-agent-cli docs /guides/routing --pretty
-```
-
----
-
-#### `search <query>` - Search Expo Documentation
-
-Search through Expo documentation using Algolia search.
-
-```bash
-# Search for "camera"
-expo-agent-cli search "camera"
-
-# Limit results and show pretty output
-expo-agent-cli search "navigation" --limit 5 --pretty
-```
-
-**Options:**
-- `-l, --limit <number>` - Number of results to show (default: 5, max: 20)
-- `-p, --pretty` - Display results in human-readable format
-
-**Examples:**
-```bash
-# JSON output (default) - for piping/AI processing
-expo-agent-cli search "expo-router" --limit 10
-
-# Pretty output for humans
-expo-agent-cli search "push notifications" --pretty
-```
-
----
-
-#### `version` - Show Version Information
-
-Display CLI and Expo SDK version information.
-
-```bash
-expo-agent-cli version
-```
-
----
-
-## Project Structure
-
-```
-expo-agent-cli/
-├── src/
-│   ├── cli.ts                    # Main entry point
-│   ├── commands/                 # Command implementations
-│   │   ├── docs/
-│   │   │   └── index.ts         # Docs command
-│   │   ├── search/
-│   │   │   └── index.ts         # Search command
-│   │   └── version/
-│   │       └── index.ts         # Version command
-│   └── utils/
-│       ├── constants.ts          # Constants (URLs, API keys)
-│       └── markdown-formatter.ts # Markdown formatting utilities
-├── dist/                         # Build output
-├── package.json
-├── tsconfig.json
-└── tsup.config.ts               # Build configuration
-```
-
-## Technical Details
-
-### Built With
-
-- **[Commander.js](https://github.com/tj/commander.js)** - CLI framework
-- **[Algolia Search](https://www.algolia.com/)** - Documentation search
-- **[Chalk](https://github.com/chalk/chalk)** - Terminal styling
-- **[tsup](https://github.com/egoist/tsup)** - TypeScript bundler
-- **[Bun](https://bun.sh)** - JavaScript runtime and package manager
-
-### Data Sources
-
-- **Documentation**: Fetched directly from [expo/expo GitHub repository](https://github.com/expo/expo/tree/main/docs/pages)
-- **Search**: Powered by Expo's public Algolia search API
-
-## Development
-
-### Scripts
-
-```bash
 # Build for production (runs publint via postbuild)
 bun run build
 
@@ -172,39 +62,19 @@ bun test
 # Lint source files
 bun run lint
 
-# Format check
+# Format source files
 bun run format
 ```
 
-### Design Principles
+### Release workflow
 
-- **Modular**: Each command is a self-contained module
-- **Type-Safe**: Strict TypeScript throughout
-- **Piping Support**: Stdin/stdout support for integration with other tools
-- **AI-Friendly**: JSON output by default for machine processing
-- **Human-Friendly**: Pretty output option for terminal reading
-
-## Examples
-
-### Integration with jq
+This project follows [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and uses [`np`](https://github.com/sindresorhus/np) to guide npm publishing.
 
 ```bash
-# Search and extract URLs
-expo-agent-cli search "camera" | jq -r '.results[].url'
-
-# Get specific field from docs
-expo-agent-cli docs /get-started/introduction | grep "^#" | head -1
+bun run release
 ```
 
-### Use with AI Agents
-
-```bash
-# Get documentation for AI processing
-expo-agent-cli docs /guides/routing > context.md
-
-# Search and pass results to AI
-expo-agent-cli search "authentication" --limit 10 > search-results.json
-```
+You can validate commit messages with `commitlint`, for example: `bun run commitlint -- --from HEAD~1`.
 
 ## License
 
