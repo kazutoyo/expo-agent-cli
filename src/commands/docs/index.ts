@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import { processApiSections } from "../../utils/api-section-parser.js";
 import { getExpoDocsUrl } from "../../utils/constants.js";
 import { formatMarkdownForTerminal } from "../../utils/markdown-formatter.js";
 
@@ -58,7 +59,10 @@ export const docsCommand = (program: Command, defaultExpoVersion: string) => {
 					);
 				}
 
-				const content = await response.text();
+				let content = await response.text();
+
+				// Process APISection tags in MDX content
+				content = await processApiSections(content, expoVersion);
 
 				if (options.pretty) {
 					// Display with terminal formatting
