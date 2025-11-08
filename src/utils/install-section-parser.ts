@@ -13,9 +13,7 @@ function extractPackageNameFromFrontmatter(mdxContent: string): string | null {
 	const frontmatter = frontmatterMatch[1];
 
 	// Extract packageName
-	const packageNameMatch = frontmatter.match(
-		/packageName:\s*['"]([^'"]+)['"]/,
-	);
+	const packageNameMatch = frontmatter.match(/packageName:\s*['"]([^'"]+)['"]/);
 	return packageNameMatch ? packageNameMatch[1] : null;
 }
 
@@ -103,10 +101,7 @@ export function processInstallSections(mdxContent: string): string {
 		}
 
 		// Generate installation markdown
-		const markdown = generateInstallationMarkdown(
-			packageName,
-			attrs.cmd,
-		);
+		const markdown = generateInstallationMarkdown(packageName, attrs.cmd);
 
 		// Replace the tag with generated markdown
 		// Check if there's an "## Installation" heading right before the tag
@@ -117,10 +112,7 @@ export function processInstallSections(mdxContent: string): string {
 
 		if (withHeadingPattern.test(processedContent)) {
 			// Replace both the heading and the tag
-			processedContent = processedContent.replace(
-				withHeadingPattern,
-				markdown,
-			);
+			processedContent = processedContent.replace(withHeadingPattern, markdown);
 		} else {
 			// Just replace the tag
 			processedContent = processedContent.replace(match, `\n${markdown}\n`);

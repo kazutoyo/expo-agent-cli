@@ -32,8 +32,7 @@ async function fetchIOSPermissions(): Promise<IOSPermissionsData | null> {
 			);
 			return null;
 		}
-		iosPermissionsCache =
-			(await response.json()) as IOSPermissionsData;
+		iosPermissionsCache = (await response.json()) as IOSPermissionsData;
 		return iosPermissionsCache;
 	} catch (error) {
 		console.error("Error fetching iOS permissions data:", error);
@@ -60,8 +59,7 @@ async function fetchAndroidPermissions(): Promise<AndroidPermissionsData | null>
 			);
 			return null;
 		}
-		androidPermissionsCache =
-			(await response.json()) as AndroidPermissionsData;
+		androidPermissionsCache = (await response.json()) as AndroidPermissionsData;
 		return androidPermissionsCache;
 	} catch (error) {
 		console.error("Error fetching Android permissions data:", error);
@@ -158,9 +156,7 @@ function parsePermissionsAttribute(tag: string): string[] | null {
 /**
  * Process IOSPermissions tags
  */
-async function processIOSPermissionsTags(
-	content: string,
-): Promise<string> {
+async function processIOSPermissionsTags(content: string): Promise<string> {
 	const tagRegex = /<IOSPermissions[^>]*\/>/g;
 	const matches = content.match(tagRegex);
 
@@ -207,9 +203,7 @@ async function processIOSPermissionsTags(
 /**
  * Process AndroidPermissions tags
  */
-async function processAndroidPermissionsTags(
-	content: string,
-): Promise<string> {
+async function processAndroidPermissionsTags(content: string): Promise<string> {
 	const tagRegex = /<AndroidPermissions[^>]*\/>/g;
 	const matches = content.match(tagRegex);
 

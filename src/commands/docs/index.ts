@@ -1,9 +1,9 @@
 import type { Command } from "commander";
 import { processApiSections } from "../../utils/api-section-parser.js";
-import { processInstallSections } from "../../utils/install-section-parser.js";
-import { processPermissionSections } from "../../utils/permission-section-parser.js";
 import { getExpoDocsUrl } from "../../utils/constants.js";
+import { processInstallSections } from "../../utils/install-section-parser.js";
 import { formatMarkdownForTerminal } from "../../utils/markdown-formatter.js";
+import { processPermissionSections } from "../../utils/permission-section-parser.js";
 
 interface DocsOptions {
 	pretty?: boolean;
