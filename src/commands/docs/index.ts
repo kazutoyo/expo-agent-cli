@@ -1,5 +1,7 @@
 import type { Command } from "commander";
 import { processApiSections } from "../../utils/api-section-parser.js";
+import { processInstallSections } from "../../utils/install-section-parser.js";
+import { processPermissionSections } from "../../utils/permission-section-parser.js";
 import { getExpoDocsUrl } from "../../utils/constants.js";
 import { formatMarkdownForTerminal } from "../../utils/markdown-formatter.js";
 
@@ -60,6 +62,12 @@ export const docsCommand = (program: Command, defaultExpoVersion: string) => {
 				}
 
 				let content = await response.text();
+
+				// Process InstallSection tags in MDX content
+				content = processInstallSections(content);
+
+				// Process Permission tags in MDX content
+				content = await processPermissionSections(content);
 
 				// Process APISection tags in MDX content
 				content = await processApiSections(content, expoVersion);
