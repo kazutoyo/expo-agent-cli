@@ -1,4 +1,4 @@
-# @expo-agent/core
+# expo-agent-core
 
 Core utilities and parsers for Expo documentation processing.
 
@@ -20,7 +20,7 @@ import {
   processPermissionSections,
   getExpoDocsUrl,
   formatMarkdownForTerminal,
-} from "@expo-agent/core";
+} from "expo-agent-core";
 
 // Process API sections in MDX
 const processedMdx = await processApiSections(mdxContent, "sdk-54");

@@ -1,4 +1,4 @@
-# @expo-agent/search
+# expo-agent-search
 
 Offline search engine for Expo documentation using FlexSearch.
 
@@ -11,7 +11,7 @@ Offline search engine for Expo documentation using FlexSearch.
 ## Usage
 
 ```typescript
-import { crawlExpoDocs, OfflineSearchEngine } from "@expo-agent/search";
+import { crawlExpoDocs, OfflineSearchEngine } from "expo-agent-search";
 
 // Crawl documentation
 const docs = await crawlExpoDocs("./expo-docs/docs");

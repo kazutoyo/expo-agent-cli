@@ -6,5 +6,5 @@ export default defineConfig({
 	dts: true,
 	clean: true,
 	sourcemap: true,
-	external: ["@expo-agent/core"],
+	external: ["expo-agent-core"],
 });

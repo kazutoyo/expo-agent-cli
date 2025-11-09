@@ -17,8 +17,8 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { crawlExpoDocs, OfflineSearchEngine } from "@expo-agent/search";
 import { Command } from "commander";
+import { crawlExpoDocs, OfflineSearchEngine } from "expo-agent-search";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

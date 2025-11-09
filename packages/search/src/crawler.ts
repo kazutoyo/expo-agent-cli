@@ -4,7 +4,7 @@ import {
 	processApiSections,
 	processInstallSections,
 	processPermissionSections,
-} from "@expo-agent/core";
+} from "expo-agent-core";
 
 export interface DocMetadata {
 	id: string;

@@ -1,4 +1,4 @@
-# @expo-agent/indexer
+# expo-agent-indexer
 
 CLI tool for building search indexes from Expo documentation.
 

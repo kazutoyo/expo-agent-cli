@@ -9,7 +9,7 @@ export default defineConfig({
 	dts: false,
 	clean: true,
 	sourcemap: true,
-	external: ["@expo-agent/core", "@expo-agent/search"],
+	external: ["expo-agent-core", "expo-agent-search"],
 	shims: true,
 	banner: {
 		js: "#!/usr/bin/env node",

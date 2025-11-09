@@ -1,10 +1,10 @@
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { formatHighlight } from "@expo-agent/core";
-import { OfflineSearchEngine as SearchEngine } from "@expo-agent/search";
 import chalk from "chalk";
 import type { Command } from "commander";
+import { formatHighlight } from "expo-agent-core";
+import { OfflineSearchEngine as SearchEngine } from "expo-agent-search";
 
 interface SearchOptions {
 	limit?: string;
