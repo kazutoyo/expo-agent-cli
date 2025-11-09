@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/kazutoyo/expo-agent-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/kazutoyo/expo-agent-cli/actions/workflows/ci.yml)
 [![npm version](https://badge.fury.io/js/expo-agent-cli.svg)](https://www.npmjs.com/package/expo-agent-cli)
+[![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/kazutoyo/expo-agent-cli?utm_source=oss&utm_medium=github&utm_campaign=kazutoyo%2Fexpo-agent-cli&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)](https://coderabbit.ai)
 
 CLI tool for searching and fetching Expo documentation from the terminal. Inspired by [Hono CLI](https://github.com/honojs/cli).
 
