@@ -8,8 +8,9 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "bun run build:deps && bun run build:apps",
-    "build:deps": "bun run --filter 'expo-agent-core' build && bun run --filter 'expo-agent-search' build",
+    "build": "bun run build:core && bun run build:search && bun run build:apps",
+    "build:core": "bun run --filter 'expo-agent-core' build",
+    "build:search": "bun run --filter 'expo-agent-search' build",
     "build:apps": "bun run --filter 'expo-agent-cli' build && bun run --filter 'expo-agent-indexer' build",
     "dev": "bun run --filter 'expo-agent-cli' dev",
     "test": "bun test ./packages",
