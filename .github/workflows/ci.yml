@@ -25,8 +25,8 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build dependencies
-        run: bun run build:core && bun run build:search
+      - name: Build packages
+        run: bun run build
 
       - name: Run tests
         run: bun run test:run
@@ -68,14 +68,8 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build core package
-        run: bun run build:core
-
-      - name: Build search package
-        run: bun run build:search
-
-      - name: Build CLI and indexer
-        run: bun run build:apps
+      - name: Build all packages with Turbo
+        run: bun run build
 
       - name: Check build artifacts
         run: |

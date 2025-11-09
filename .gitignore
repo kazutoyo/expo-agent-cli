@@ -38,3 +38,4 @@ expo-docs/
 
 # Generated search index
 src/data/search-docs.json
+.turbo

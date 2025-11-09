@@ -25,6 +25,8 @@
 		"commander": "^14.0.0"
 	},
 	"devDependencies": {
+		"expo-agent-core": "workspace:*",
+		"expo-agent-search": "workspace:*",
 		"publint": "^0.2.8"
 	},
 	"keywords": [
