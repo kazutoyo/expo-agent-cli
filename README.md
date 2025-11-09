@@ -48,6 +48,79 @@ expo-agent-cli version
 - `search <query>` - Search Expo documentation
 - `version` - Show the Expo SDK version branch used by the CLI
 
+## For AI Agents
+
+To help AI agents effectively use `expo-agent-cli` in your Expo projects, add the following section to your project's `CLAUDE.md` or `AGENTS.md`:
+
+<details>
+<summary>📋 Click to copy: AI Agent instructions for using expo-agent-cli</summary>
+
+```markdown
+## How to Search Expo Documentation
+
+This project uses `expo-agent-cli` to retrieve the latest Expo documentation.
+
+### Basic Usage
+
+​```bash
+# 1. Search for information
+expo-agent-cli search <query>
+
+# 2. View documentation
+expo-agent-cli docs <path>
+
+# 3. Search and get documentation for the first result (recommended)
+expo-agent-cli search <query> | jq '.results[0].path' | xargs -I {} expo-agent-cli docs {}
+​```
+
+### Usage Examples
+
+​```bash
+# Look up expo-audio
+expo-agent-cli search expo-audio | jq '.results[0].path' | xargs -I {} expo-agent-cli docs {}
+
+# Look up expo-haptics
+expo-agent-cli search expo-haptics | jq '.results[0].path' | xargs -I {} expo-agent-cli docs {}
+
+# Look up expo-router
+expo-agent-cli search expo-router | jq '.results[0].path' | xargs -I {} expo-agent-cli docs {}
+​```
+
+### Search Result Format
+
+`expo-agent-cli search` returns results in the following JSON format:
+
+​```json
+{
+  "query": "expo-haptics",
+  "total": 5,
+  "results": [
+    {
+      "title": "...",
+      "category": "...",
+      "url": "https://docs.expo.dev/...",
+      "path": "/versions/v54.0.0/sdk/haptics/"
+    }
+  ]
+}
+​```
+
+### Best Practices for Implementation
+
+Before implementing new Expo features:
+1. Search for the latest documentation using `expo-agent-cli search`
+2. Check the documentation for version 54 (this project's Expo version)
+3. Review the API, limitations, and platform compatibility
+4. Implement based on the sample code
+```
+
+</details>
+
+By adding this section to your AI agent configuration files, the agent will know how to:
+- Search for Expo documentation efficiently
+- Retrieve and parse documentation in a structured format
+- Follow best practices when implementing Expo features
+
 ## Development
 
 This project uses a **monorepo structure** with Bun workspaces:
