@@ -8,26 +8,74 @@ on:
 
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20, 22, 24]
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Install Bun
-        uses: oven-sh/setup-bun@v1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          bun-version: latest
+          submodules: recursive
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.0
 
       - name: Install dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
 
-      - name: Run tests
-        run: bun run test
-
-      - name: Build
+      - name: Build packages
         run: bun run build
 
-      - name: Lint & Format check
+      - name: Run tests
+        run: bun run test:run
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.0
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run Biome CI
         run: bun run ci
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.0
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build all packages with Turbo
+        run: bun run build
+
+      - name: Check build artifacts
+        run: |
+          test -f packages/cli/dist/cli.js || (echo "CLI build failed" && exit 1)
+          test -f packages/cli/dist/data/search-index.gz || (echo "Search index missing" && exit 1)
+          test -f packages/core/dist/index.js || (echo "Core build failed" && exit 1)
+          test -f packages/search/dist/index.js || (echo "Search build failed" && exit 1)
+          test -f packages/indexer/dist/cli.js || (echo "Indexer build failed" && exit 1)
+          echo "✅ All build artifacts verified"

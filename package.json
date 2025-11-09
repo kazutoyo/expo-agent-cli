@@ -8,10 +8,10 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "bun run --filter '*' build",
-    "dev": "bun run --filter 'expo-agent-cli' dev",
-    "test": "bun test",
-    "test:run": "bun test --run",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "test": "bun test ./packages",
+    "test:run": "bun test --run ./packages",
     "commitlint": "commitlint --edit",
     "release": "cd packages/cli && bun run release",
     "check": "biome check --write packages",
@@ -30,6 +30,7 @@
     "@evilmartians/lefthook": "^2.0.1",
     "@types/bun": "latest",
     "tsup": "^8.3.5",
+    "turbo": "^2.6.0",
     "typescript": "^5"
   },
   "packageManager": "bun@1.3.0",
