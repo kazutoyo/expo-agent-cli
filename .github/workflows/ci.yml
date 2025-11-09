@@ -68,8 +68,14 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build all packages
-        run: bun run build
+      - name: Build core package
+        run: bun run build:core
+
+      - name: Build search package
+        run: bun run build:search
+
+      - name: Build CLI and indexer
+        run: bun run build:apps
 
       - name: Check build artifacts
         run: |
