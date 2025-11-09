@@ -8,10 +8,12 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "bun run --filter '*' build",
+    "build": "bun run build:deps && bun run build:apps",
+    "build:deps": "bun run --filter 'expo-agent-core' build && bun run --filter 'expo-agent-search' build",
+    "build:apps": "bun run --filter 'expo-agent-cli' build && bun run --filter 'expo-agent-indexer' build",
     "dev": "bun run --filter 'expo-agent-cli' dev",
-    "test": "bun test",
-    "test:run": "bun test --run",
+    "test": "bun test ./packages",
+    "test:run": "bun test --run ./packages",
     "commitlint": "commitlint --edit",
     "release": "cd packages/cli && bun run release",
     "check": "biome check --write packages",

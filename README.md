@@ -1,5 +1,8 @@
 # expo-agent-cli
 
+[![CI](https://github.com/kazutoyo/expo-agent-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/kazutoyo/expo-agent-cli/actions/workflows/ci.yml)
+[![npm version](https://badge.fury.io/js/expo-agent-cli.svg)](https://www.npmjs.com/package/expo-agent-cli)
+
 CLI tool for searching and fetching Expo documentation from the terminal. Inspired by [Hono CLI](https://github.com/honojs/cli).
 
 ## Features
@@ -109,24 +112,32 @@ The search feature requires a prebuilt index. To build it:
    bun run build-index
    ```
 
-This will crawl all MDX files in `expo-docs/docs/pages` and create `packages/cli/src/data/search-docs.json`.
+This will crawl all MDX files in `expo-docs/docs/pages` and create `packages/cli/src/data/search-index.gz`.
 
 ### Package Structure
 
-- **@expo-agent/core**: Common parsers and utilities for MDX processing
-- **@expo-agent/search**: FlexSearch-based offline search engine
-- **@expo-agent/cli**: Main CLI tool (published as `expo-agent-cli`)
-- **@expo-agent/indexer**: Tool for building search indexes from Expo docs
+- **expo-agent-core**: Common parsers and utilities for MDX processing
+- **expo-agent-search**: FlexSearch-based offline search engine (with gzip compression)
+- **expo-agent-cli**: Main CLI tool (published to npm)
+- **expo-agent-indexer**: Tool for building search indexes from Expo docs
 
 ### Release workflow
 
-This project follows [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and uses [`np`](https://github.com/sindresorhus/np) to guide npm publishing.
+This project follows [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
 ```bash
+# Release to npm (from packages/cli directory)
 bun run release
 ```
 
 You can validate commit messages with `commitlint`, for example: `bun run commitlint -- --from HEAD~1`.
+
+### CI/CD
+
+The project includes GitHub Actions workflows for:
+- **Testing**: Runs all tests in the `packages/` directory
+- **Linting**: Runs Biome for code quality checks
+- **Building**: Ensures all packages build successfully
 
 ## License
 
