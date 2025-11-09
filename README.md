@@ -5,7 +5,7 @@ CLI tool for searching and fetching Expo documentation from the terminal. Inspir
 ## Features
 
 - 📖 Fetch Expo documentation directly from GitHub in Markdown format
-- 🔍 Search Expo documentation using Algolia
+- 🔍 **Offline search** powered by FlexSearch (no external API required)
 - 🎨 Pretty terminal output with color formatting
 - 🤖 JSON output for AI agents and piping
 - ⚡️ Fast and lightweight
@@ -46,25 +46,77 @@ expo-agent-cli version
 
 ## Development
 
+This project uses a **monorepo structure** with Bun workspaces:
+
+```
+packages/
+├── core/      # Shared parsers and utilities
+├── search/    # Offline search engine
+├── cli/       # CLI tool (published to npm)
+└── indexer/   # Search index builder
+```
+
+### Setup
+
 ```bash
 # Install dependencies
 bun install
 
-# Build for production (runs publint via postbuild)
+# Setup Expo documentation submodule (required for search index)
+git submodule add https://github.com/expo/expo.git expo-docs
+cd expo-docs && git checkout sdk-54 && cd ..
+
+# Build all packages
 bun run build
 
-# Development mode with watch
+# Build search index (required for offline search)
+bun run build-index
+```
+
+### Development Commands
+
+```bash
+# Build all packages
+bun run build
+
+# Development mode with watch (CLI only)
 bun run dev
 
 # Run tests
 bun test
 
-# Lint source files
+# Lint all packages
 bun run lint
 
-# Format source files
+# Format all packages
 bun run format
 ```
+
+### Building the Search Index
+
+The search feature requires a prebuilt index. To build it:
+
+1. **Initialize the Expo docs submodule** (one-time setup):
+   ```bash
+   git submodule add https://github.com/expo/expo.git expo-docs
+   cd expo-docs
+   git checkout sdk-54  # or your target SDK version
+   cd ..
+   ```
+
+2. **Build the search index**:
+   ```bash
+   bun run build-index
+   ```
+
+This will crawl all MDX files in `expo-docs/docs/pages` and create `packages/cli/src/data/search-docs.json`.
+
+### Package Structure
+
+- **@expo-agent/core**: Common parsers and utilities for MDX processing
+- **@expo-agent/search**: FlexSearch-based offline search engine
+- **@expo-agent/cli**: Main CLI tool (published as `expo-agent-cli`)
+- **@expo-agent/indexer**: Tool for building search indexes from Expo docs
 
 ### Release workflow
 

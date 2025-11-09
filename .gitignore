@@ -32,3 +32,9 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# Expo docs submodule
+expo-docs/
+
+# Generated search index
+src/data/search-docs.json
