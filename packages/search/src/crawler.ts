@@ -28,10 +28,10 @@ function extractIsDeprecated(mdxContent: string): boolean {
 	const frontmatterMatch = mdxContent.match(/^---\n([\s\S]*?)\n---/);
 	if (frontmatterMatch?.[1]) {
 		const deprecatedMatch = frontmatterMatch[1].match(
-			/isDeprecated:\s*(true|false)\s*$/m,
+			/isDeprecated:\s*(?:"|')?(true|false)(?:"|')?\s*(?:#.*)?$/im,
 		);
 		if (deprecatedMatch?.[1]) {
-			return deprecatedMatch[1] === "true";
+			return deprecatedMatch[1].toLowerCase() === "true";
 		}
 	}
 	return false;
