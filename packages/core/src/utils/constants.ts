@@ -12,7 +12,7 @@ export const getVersionInfo = (): VersionInfo => {
 	const __dirname = dirname(__filename);
 
 	// Read version and expoVersion from package.json
-	const packageJsonPath = join(__dirname, "../package.json");
+	const packageJsonPath = join(__dirname, "../../package.json");
 	return JSON.parse(readFileSync(packageJsonPath, "utf-8")) as {
 		version: string;
 		expoVersion: string;

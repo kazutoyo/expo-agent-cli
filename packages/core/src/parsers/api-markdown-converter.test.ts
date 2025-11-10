@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { convertApiToMarkdown } from "./api-markdown-converter.js";
 import type { ApiDeclaration } from "../types/api-types.js";
+import { convertApiToMarkdown } from "./api-markdown-converter.js";
 
 describe("convertApiToMarkdown", () => {
 	test("should convert enum to markdown", () => {
