@@ -3,9 +3,24 @@ import { join } from "node:path";
 import { defineConfig } from "tsup";
 
 // Read version from package.json at build time
-const packageJson = JSON.parse(
-	readFileSync(join(process.cwd(), "package.json"), "utf-8"),
-) as { version: string };
+function getPackageVersion(): string {
+	try {
+		const packageJsonPath = join(process.cwd(), "package.json");
+		const packageJsonContent = readFileSync(packageJsonPath, "utf-8");
+		const packageJson = JSON.parse(packageJsonContent) as { version: string };
+
+		if (!packageJson.version || typeof packageJson.version !== "string") {
+			throw new Error("Invalid or missing version in package.json");
+		}
+
+		return packageJson.version;
+	} catch (error) {
+		console.error("Failed to read package.json version:", error);
+		throw error;
+	}
+}
+
+const packageVersion = getPackageVersion();
 
 export default defineConfig({
 	entry: ["src/cli.ts"],
@@ -20,7 +35,7 @@ export default defineConfig({
 		js: "#!/usr/bin/env node",
 	},
 	define: {
-		__CLI_VERSION__: JSON.stringify(packageJson.version),
+		__CLI_VERSION__: JSON.stringify(packageVersion),
 	},
 	onSuccess: async () => {
 		// Copy compressed search index to dist
