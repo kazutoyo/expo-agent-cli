@@ -27,7 +27,7 @@ export class OfflineSearchEngine {
 			document: {
 				id: "id",
 				index: ["title", "content", "hierarchy:lvl0", "hierarchy:lvl1"],
-				store: ["title", "url", "hierarchy", "path"],
+				store: ["title", "url", "hierarchy", "path", "isDeprecated"],
 			},
 		});
 	}
@@ -111,6 +111,13 @@ export class OfflineSearchEngine {
 				} else {
 					hits.set(id, { score: 1, doc });
 				}
+			}
+		}
+
+		// Apply deprecation penalty to scores
+		for (const hit of hits.values()) {
+			if (hit.doc.isDeprecated) {
+				hit.score *= 0.3; // Reduce score by 70% for deprecated docs
 			}
 		}
 

@@ -18,6 +18,23 @@ export interface DocMetadata {
 		lvl3?: string;
 	};
 	path: string;
+	isDeprecated?: boolean;
+}
+
+/**
+ * Extract isDeprecated flag from MDX frontmatter
+ */
+function extractIsDeprecated(mdxContent: string): boolean {
+	const frontmatterMatch = mdxContent.match(/^---\n([\s\S]*?)\n---/);
+	if (frontmatterMatch?.[1]) {
+		const deprecatedMatch = frontmatterMatch[1].match(
+			/isDeprecated:\s*(true|false)\s*$/m,
+		);
+		if (deprecatedMatch?.[1]) {
+			return deprecatedMatch[1] === "true";
+		}
+	}
+	return false;
 }
 
 /**
@@ -221,6 +238,7 @@ export async function crawlExpoDocs(docsPath: string): Promise<DocMetadata[]> {
 			);
 			const hierarchy = buildHierarchy(relativePath, title);
 			const url = pathToUrl(relativePath);
+			const isDeprecated = extractIsDeprecated(mdxContent);
 
 			docs.push({
 				id: relativePath,
@@ -229,6 +247,7 @@ export async function crawlExpoDocs(docsPath: string): Promise<DocMetadata[]> {
 				content,
 				hierarchy,
 				path: relativePath,
+				isDeprecated,
 			});
 		} catch (error) {
 			console.error(`Failed to process ${filePath}:`, error);
