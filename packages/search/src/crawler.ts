@@ -23,8 +23,9 @@ export interface DocMetadata {
 
 /**
  * Extract isDeprecated flag from MDX frontmatter
+ * @internal - exported for testing
  */
-function extractIsDeprecated(mdxContent: string): boolean {
+export function extractIsDeprecated(mdxContent: string): boolean {
 	const frontmatterMatch = mdxContent.match(/^---\n([\s\S]*?)\n---/);
 	if (frontmatterMatch?.[1]) {
 		const deprecatedMatch = frontmatterMatch[1].match(
@@ -39,8 +40,9 @@ function extractIsDeprecated(mdxContent: string): boolean {
 
 /**
  * Extract title from MDX content
+ * @internal - exported for testing
  */
-function extractTitle(mdxContent: string, filePath: string): string {
+export function extractTitle(mdxContent: string, filePath: string): string {
 	// Try to find H1 title
 	const h1Match = mdxContent.match(/^#\s+(.+)$/m);
 	if (h1Match?.[1]) {
