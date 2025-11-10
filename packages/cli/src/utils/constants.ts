@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
 
 type VersionInfo = {
 	version: string;
@@ -11,7 +13,7 @@ export const getVersionInfo = (): VersionInfo => {
 	const __filename = fileURLToPath(import.meta.url);
 	const __dirname = dirname(__filename);
 
-	// Read version from core package.json
+	// Read version from cli package.json (../../package.json from utils/)
 	const packageJsonPath = join(__dirname, "../../package.json");
 	const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8")) as {
 		version: string;

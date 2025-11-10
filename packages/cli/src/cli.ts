@@ -1,8 +1,8 @@
 import { Command } from "commander";
-import { getVersionInfo } from "expo-agent-core";
 import { docsCommand } from "./commands/docs/index.js";
 import { searchCommand } from "./commands/search/index.js";
 import { versionCommand } from "./commands/version/index.js";
+import { getVersionInfo } from "./utils/constants.js";
 
 const program = new Command();
 
