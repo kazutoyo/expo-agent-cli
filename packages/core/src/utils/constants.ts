@@ -11,11 +11,29 @@ export const getVersionInfo = (): VersionInfo => {
 	const __filename = fileURLToPath(import.meta.url);
 	const __dirname = dirname(__filename);
 
-	// Read version and expoVersion from package.json
+	// Read version from core package.json
 	const packageJsonPath = join(__dirname, "../../package.json");
-	return JSON.parse(readFileSync(packageJsonPath, "utf-8")) as {
+	const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8")) as {
 		version: string;
-		expoVersion: string;
+		expoVersion?: string;
+	};
+
+	// Try to detect expo version from installed expo package
+	let expoVersion = packageJson.expoVersion || "sdk-54"; // fallback default
+	try {
+		const expoPackageJsonPath = require.resolve("expo/package.json");
+		const expoPackageJson = JSON.parse(
+			readFileSync(expoPackageJsonPath, "utf-8"),
+		) as { version: string };
+		const majorVersion = expoPackageJson.version.split(".")[0];
+		expoVersion = `sdk-${majorVersion}`;
+	} catch {
+		// If expo package is not found, use fallback from package.json
+	}
+
+	return {
+		version: packageJson.version,
+		expoVersion,
 	};
 };
 
