@@ -12,7 +12,10 @@ interface DocsOptions {
 	sdkVersion?: string;
 }
 
-export const docsCommand = (program: Command, defaultExpoVersion: string) => {
+export const docsCommand = (
+	program: Command,
+	defaultExpoVersion: string | null,
+) => {
 	program
 		.command("docs")
 		.description("Fetch Expo documentation in Markdown format")
@@ -27,8 +30,8 @@ export const docsCommand = (program: Command, defaultExpoVersion: string) => {
 			"Expo SDK version branch (e.g., sdk-54, sdk-53)",
 		)
 		.action(async (pathArg: string, options: DocsOptions) => {
-			// Use provided version or default
-			const expoVersion = options.sdkVersion || defaultExpoVersion;
+			// Use provided version or default (fallback to "latest" if no expo installed)
+			const expoVersion = options.sdkVersion || defaultExpoVersion || "latest";
 			try {
 				let path = pathArg;
 

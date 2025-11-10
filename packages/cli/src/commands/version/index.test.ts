@@ -117,4 +117,15 @@ describe("versionCommand", () => {
 		expect(consoleLogSpy.mock.calls.length).toBe(1);
 		expect(consoleLogSpy.mock.calls[0][0]).toBe("sdk-54");
 	});
+
+	it("should output 'latest' when expoVersion is null", async () => {
+		const cliVersion = "0.1.0";
+		const expoVersion = null;
+		versionCommand(program, cliVersion, expoVersion);
+
+		await program.parseAsync(["node", "test", "version"]);
+
+		expect(consoleLogSpy.mock.calls.length).toBe(1);
+		expect(consoleLogSpy.mock.calls[0][0]).toBe("latest");
+	});
 });

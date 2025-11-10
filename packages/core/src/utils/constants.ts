@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 type VersionInfo = {
 	version: string;
-	expoVersion: string;
+	expoVersion: string | null;
 };
 
 export const getVersionInfo = (): VersionInfo => {
@@ -15,11 +15,10 @@ export const getVersionInfo = (): VersionInfo => {
 	const packageJsonPath = join(__dirname, "../../package.json");
 	const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8")) as {
 		version: string;
-		expoVersion?: string;
 	};
 
 	// Try to detect expo version from installed expo package
-	let expoVersion = packageJson.expoVersion || "sdk-54"; // fallback default
+	let expoVersion: string | null = null;
 	try {
 		const expoPackageJsonPath = require.resolve("expo/package.json");
 		const expoPackageJson = JSON.parse(
@@ -28,7 +27,7 @@ export const getVersionInfo = (): VersionInfo => {
 		const majorVersion = expoPackageJson.version.split(".")[0];
 		expoVersion = `sdk-${majorVersion}`;
 	} catch {
-		// If expo package is not found, use fallback from package.json
+		// If expo package is not found, return null
 	}
 
 	return {
@@ -37,10 +36,13 @@ export const getVersionInfo = (): VersionInfo => {
 	};
 };
 
-const resolveExpoBranch = (targetExpoVersion: string): string =>
-	targetExpoVersion === "latest"
-		? getVersionInfo().expoVersion
-		: targetExpoVersion;
+const resolveExpoBranch = (targetExpoVersion: string): string => {
+	if (targetExpoVersion === "latest") {
+		const expoVersion = getVersionInfo().expoVersion;
+		return expoVersion || "latest";
+	}
+	return targetExpoVersion;
+};
 
 const toVersionSegment = (branch: string): string | null => {
 	if (branch.startsWith("sdk-")) {

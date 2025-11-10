@@ -7,16 +7,22 @@ import {
 
 describe("constants", () => {
 	describe("getVersionInfo", () => {
-		test("returns version info from package.json", () => {
+		test("returns version info with correct types", () => {
 			const info = getVersionInfo();
 			expect(info).toHaveProperty("version");
 			expect(info).toHaveProperty("expoVersion");
 			expect(typeof info.version).toBe("string");
-			expect(typeof info.expoVersion).toBe("string");
+			// expoVersion can be string or null depending on whether expo is installed
+			expect(
+				typeof info.expoVersion === "string" || info.expoVersion === null,
+			).toBe(true);
 		});
 
-		test("expoVersion follows sdk-XX format", () => {
+		test("detects expo version from installed package", () => {
 			const info = getVersionInfo();
+			// In this test environment, expo is installed in root devDependencies
+			// So expoVersion should be detected as sdk-XX format
+			expect(info.expoVersion).not.toBeNull();
 			expect(info.expoVersion).toMatch(/^sdk-\d+$/);
 		});
 	});
@@ -29,9 +35,10 @@ describe("constants", () => {
 			);
 		});
 
-		test("maps latest to configured Expo version", () => {
+		test("maps latest to detected Expo version or latest branch", () => {
 			const url = getExpoDocsBaseUrl("latest");
-			const expectedBranch = getVersionInfo().expoVersion;
+			const expoVersion = getVersionInfo().expoVersion;
+			const expectedBranch = expoVersion || "latest";
 			expect(url).toBe(
 				`https://raw.githubusercontent.com/expo/expo/refs/heads/${expectedBranch}/docs/pages`,
 			);
@@ -81,11 +88,13 @@ describe("constants", () => {
 			);
 		});
 
-		test("handles latest version parameter", () => {
+		test("handles latest version parameter with detected expo version", () => {
 			const url = getExpoDocsUrl("/sdk/camera", "latest");
-			const expectedBranch = getVersionInfo().expoVersion;
+			const expoVersion = getVersionInfo().expoVersion;
+			// In test environment, expo is installed, so it should resolve to sdk-XX
+			expect(expoVersion).not.toBeNull();
 			expect(url).toBe(
-				`https://raw.githubusercontent.com/expo/expo/refs/heads/${expectedBranch}/docs/pages/sdk/camera.mdx`,
+				`https://raw.githubusercontent.com/expo/expo/refs/heads/${expoVersion}/docs/pages/sdk/camera.mdx`,
 			);
 		});
 

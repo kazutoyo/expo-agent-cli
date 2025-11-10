@@ -36,7 +36,6 @@
 		"agent",
 		"sdk"
 	],
-	"expoVersion": "sdk-54",
 	"author": "Kazutoyo Tokai <kazutoyo.jp@gmail.com> (https://github.com/kazutoyo)",
 	"license": "MIT",
 	"repository": {
