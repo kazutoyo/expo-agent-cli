@@ -71,7 +71,9 @@ export class OfflineSearchEngine {
 	 */
 	async importCompressed(compressedData: Buffer): Promise<void> {
 		// Decompress
-		const decompressed = gunzipSync(compressedData);
+		const decompressed = gunzipSync(
+			compressedData as unknown as Parameters<typeof gunzipSync>[0],
+		);
 		const exportData = JSON.parse(decompressed.toString());
 
 		// Import FlexSearch index data
