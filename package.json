@@ -1,6 +1,6 @@
 {
   "name": "expo-agent-cli-root",
-  "version": "0.1.3",
+  "version": "0.3.0",
   "private": true,
   "description": "CLI tool for accessing Expo SDK documentation and search",
   "type": "module",

@@ -1,6 +1,6 @@
 {
 	"name": "expo-agent-search",
-	"version": "0.1.3",
+	"version": "0.3.0",
 	"description": "Offline search engine for Expo documentation",
 	"type": "module",
 	"main": "./dist/index.js",
