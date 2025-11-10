@@ -1,11 +1,11 @@
 import type { Command } from "commander";
 import {
 	formatMarkdownForTerminal,
-	getExpoDocsUrl,
 	processApiSections,
 	processInstallSections,
 	processPermissionSections,
 } from "expo-agent-core";
+import { getExpoDocsUrl } from "../../utils/constants";
 
 interface DocsOptions {
 	pretty?: boolean;
