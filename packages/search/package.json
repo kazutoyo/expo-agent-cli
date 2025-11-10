@@ -17,7 +17,8 @@
 	"scripts": {
 		"build": "tsup",
 		"dev": "tsup --watch",
-		"test": "bun test"
+		"test": "bun test",
+		"lint": "echo 'Linting handled by root'"
 	},
 	"dependencies": {
 		"expo-agent-core": "workspace:*",

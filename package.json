@@ -13,18 +13,21 @@
     "test": "bun test ./packages",
     "test:run": "bun test --run ./packages",
     "commitlint": "commitlint --edit",
-    "release": "cd packages/cli && bun run release",
     "check": "biome check --write packages",
     "ci": "biome ci packages",
     "lint": "biome lint packages",
     "format": "biome format --write packages",
-    "build-index": "bun run --filter 'expo-agent-indexer' build-index"
+    "build-index": "bun run --filter 'expo-agent-indexer' build-index",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build lint test && changeset version && changeset publish"
   },
   "engines": {
     "node": ">=20.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.1",
+    "@changesets/cli": "^2.29.7",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
     "@evilmartians/lefthook": "^2.0.1",
