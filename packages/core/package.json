@@ -29,7 +29,7 @@
 	"scripts": {
 		"build": "tsup",
 		"dev": "tsup --watch",
-		"test": "echo 'No tests for core'",
+		"test": "bun test",
 		"lint": "echo 'Linting handled by root'"
 	},
 	"dependencies": {
