@@ -1,6 +1,11 @@
-import { copyFileSync, mkdirSync } from "node:fs";
+import { copyFileSync, mkdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { defineConfig } from "tsup";
+
+// Read version from package.json at build time
+const packageJson = JSON.parse(
+	readFileSync(join(process.cwd(), "package.json"), "utf-8"),
+) as { version: string };
 
 export default defineConfig({
 	entry: ["src/cli.ts"],
@@ -14,15 +19,13 @@ export default defineConfig({
 	banner: {
 		js: "#!/usr/bin/env node",
 	},
+	define: {
+		__CLI_VERSION__: JSON.stringify(packageJson.version),
+	},
 	onSuccess: async () => {
 		// Copy compressed search index to dist
 		try {
 			mkdirSync(join(process.cwd(), "dist", "data"), { recursive: true });
-			// copy package.json
-			copyFileSync(
-				join(process.cwd(), "package.json"),
-				join(process.cwd(), "dist", "package.json"),
-			);
 			console.log("✅ Copied package.json to dist/");
 			// copy search index
 			copyFileSync(

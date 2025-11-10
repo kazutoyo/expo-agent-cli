@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createRequire } from "node:module";
+
 const require = createRequire(import.meta.url);
 
 type VersionInfo = {
@@ -10,14 +11,22 @@ type VersionInfo = {
 };
 
 export const getVersionInfo = (): VersionInfo => {
-	const __filename = fileURLToPath(import.meta.url);
-	const __dirname = dirname(__filename);
-
-	// Read version from cli package.json (../../package.json from utils/)
-	const packageJsonPath = join(__dirname, "../../package.json");
-	const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8")) as {
-		version: string;
-	};
+	// Get CLI version (injected at build time via tsup define)
+	// In development, fallback to reading package.json
+	let version: string;
+	if (typeof __CLI_VERSION__ !== "undefined") {
+		// Production: use build-time injected constant
+		version = __CLI_VERSION__;
+	} else {
+		// Development: read from package.json
+		const __filename = fileURLToPath(import.meta.url);
+		const __dirname = dirname(__filename);
+		const packageJsonPath = join(__dirname, "../../package.json");
+		const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8")) as {
+			version: string;
+		};
+		version = packageJson.version;
+	}
 
 	// Try to detect expo version from installed expo package
 	let expoVersion: string | null = null;
@@ -33,7 +42,7 @@ export const getVersionInfo = (): VersionInfo => {
 	}
 
 	return {
-		version: packageJson.version,
+		version,
 		expoVersion,
 	};
 };
