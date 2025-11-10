@@ -26,7 +26,6 @@ export default defineConfig({
 		// Copy compressed search index to dist
 		try {
 			mkdirSync(join(process.cwd(), "dist", "data"), { recursive: true });
-			console.log("✅ Copied package.json to dist/");
 			// copy search index
 			copyFileSync(
 				join(process.cwd(), "src", "data", "search-index.gz"),
