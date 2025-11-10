@@ -18,12 +18,31 @@ export interface DocMetadata {
 		lvl3?: string;
 	};
 	path: string;
+	isDeprecated?: boolean;
+}
+
+/**
+ * Extract isDeprecated flag from MDX frontmatter
+ * @internal - exported for testing
+ */
+export function extractIsDeprecated(mdxContent: string): boolean {
+	const frontmatterMatch = mdxContent.match(/^---\n([\s\S]*?)\n---/);
+	if (frontmatterMatch?.[1]) {
+		const deprecatedMatch = frontmatterMatch[1].match(
+			/isDeprecated:\s*(?:"|')?(true|false)(?:"|')?\s*(?:#.*)?$/im,
+		);
+		if (deprecatedMatch?.[1]) {
+			return deprecatedMatch[1].toLowerCase() === "true";
+		}
+	}
+	return false;
 }
 
 /**
  * Extract title from MDX content
+ * @internal - exported for testing
  */
-function extractTitle(mdxContent: string, filePath: string): string {
+export function extractTitle(mdxContent: string, filePath: string): string {
 	// Try to find H1 title
 	const h1Match = mdxContent.match(/^#\s+(.+)$/m);
 	if (h1Match?.[1]) {
@@ -221,6 +240,7 @@ export async function crawlExpoDocs(docsPath: string): Promise<DocMetadata[]> {
 			);
 			const hierarchy = buildHierarchy(relativePath, title);
 			const url = pathToUrl(relativePath);
+			const isDeprecated = extractIsDeprecated(mdxContent);
 
 			docs.push({
 				id: relativePath,
@@ -229,6 +249,7 @@ export async function crawlExpoDocs(docsPath: string): Promise<DocMetadata[]> {
 				content,
 				hierarchy,
 				path: relativePath,
+				isDeprecated,
 			});
 		} catch (error) {
 			console.error(`Failed to process ${filePath}:`, error);
