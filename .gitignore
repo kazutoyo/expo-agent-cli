@@ -39,3 +39,6 @@ expo-docs/
 # Generated search index
 src/data/search-docs.json
 .turbo
+
+# Claude
+.claude/settings.local.json

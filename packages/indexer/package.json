@@ -12,7 +12,9 @@
 	"scripts": {
 		"build": "tsup",
 		"dev": "tsup --watch",
-		"build-index": "bun src/cli.ts"
+		"build-index": "bun src/cli.ts",
+		"lint": "echo 'Linting handled by root'",
+		"test": "echo 'No tests for indexer'"
 	},
 	"dependencies": {
 		"expo-agent-core": "workspace:*",

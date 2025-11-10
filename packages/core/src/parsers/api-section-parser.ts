@@ -50,7 +50,7 @@ async function fetchApiData(
 				`${packageName}.json`,
 			);
 			const fileContent = await readFile(localFilePath, "utf-8");
-			return JSON.parse(fileContent) as ApiDeclaration;
+			return JSON.parse(fileContent.toString()) as ApiDeclaration;
 		} catch (_error) {
 			// If local file doesn't exist, fall through to HTTP
 			console.warn(

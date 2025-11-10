@@ -15,7 +15,7 @@
 		"postbuild": "publint",
 		"dev": "tsup --watch",
 		"test": "bun test",
-		"release": "bun run build && bun run test && npm publish"
+		"lint": "echo 'Linting handled by root'"
 	},
 	"engines": {
 		"node": ">=20.0.0"

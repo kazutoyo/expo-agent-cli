@@ -230,7 +230,8 @@ export async function crawlExpoDocs(docsPath: string): Promise<DocMetadata[]> {
 
 	for (const filePath of mdxFiles) {
 		try {
-			const mdxContent = await readFile(filePath, "utf-8");
+			const mdxBuffer = await readFile(filePath, "utf-8");
+			const mdxContent = mdxBuffer.toString();
 			const relativePath = relative(pagesDir, filePath);
 			const title = extractTitle(mdxContent, relativePath);
 			const content = await extractContent(
