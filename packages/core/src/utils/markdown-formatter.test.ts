@@ -219,8 +219,9 @@ describe("formatHighlight", () => {
 		// Should not contain any HTML tags
 		expect(output).not.toContain("<");
 		expect(output).not.toContain(">");
-		// Should contain the text
-		expect(output).toContain("Text with highlight");
+		// Should contain the text parts (note: highlight is colored with chalk)
+		expect(output).toContain("Text with");
+		expect(output).toContain("highlight");
 	});
 
 	test("handles text without highlights", () => {
