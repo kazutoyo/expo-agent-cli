@@ -90,10 +90,7 @@ describe("constants", () => {
 		});
 
 		test("combines all normalization rules", () => {
-			const url = getExpoDocsUrl(
-				"versions/latest/sdk/camera.mdx/",
-				"sdk-55",
-			);
+			const url = getExpoDocsUrl("versions/latest/sdk/camera.mdx/", "sdk-55");
 			expect(url).toBe(
 				"https://raw.githubusercontent.com/expo/expo/refs/heads/sdk-55/docs/pages/versions/v55.0.0/sdk/camera.mdx",
 			);
