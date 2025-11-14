@@ -2,15 +2,16 @@ import type { Command } from "commander";
 
 export const versionCommand = (
 	program: Command,
-	_cliVersion: string,
+	cliVersion: string,
 	expoVersion: string | null,
 ) => {
 	program
 		.command("version")
-		.description("Show Expo SDK version")
+		.description("Show version information")
 		.action(async () => {
 			try {
-				console.log(expoVersion || "latest");
+				console.log(`CLI Version:  ${cliVersion}`);
+				console.log(`Expo Version: ${expoVersion || "latest (not detected)"}`);
 			} catch (error) {
 				console.error(
 					"Error displaying version information:",

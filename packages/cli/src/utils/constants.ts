@@ -3,8 +3,6 @@ import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const require = createRequire(import.meta.url);
-
 type VersionInfo = {
 	version: string;
 	expoVersion: string | null;
@@ -28,17 +26,20 @@ export const getVersionInfo = (): VersionInfo => {
 		version = packageJson.version;
 	}
 
-	// Try to detect expo version from installed expo package
+	// Try to detect expo version from user's project
 	let expoVersion: string | null = null;
 	try {
-		const expoPackageJsonPath = require.resolve("expo/package.json");
+		// Create a require function relative to user's current working directory
+		// This handles monorepos, hoisting, and symlinks correctly
+		const userRequire = createRequire(join(process.cwd(), "package.json"));
+		const expoPackageJsonPath = userRequire.resolve("expo/package.json");
 		const expoPackageJson = JSON.parse(
 			readFileSync(expoPackageJsonPath, "utf-8"),
 		) as { version: string };
 		const majorVersion = expoPackageJson.version.split(".")[0];
 		expoVersion = `sdk-${majorVersion}`;
 	} catch {
-		// If expo package is not found, return null
+		// If expo package is not found in user's project, return null
 	}
 
 	return {
@@ -50,7 +51,7 @@ export const getVersionInfo = (): VersionInfo => {
 const resolveExpoBranch = (targetExpoVersion: string): string => {
 	if (targetExpoVersion === "latest") {
 		const expoVersion = getVersionInfo().expoVersion;
-		return expoVersion || "latest";
+		return expoVersion || "main";
 	}
 	return targetExpoVersion;
 };

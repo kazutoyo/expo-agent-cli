@@ -27,18 +27,19 @@ describe("versionCommand", () => {
 		const versionCmd = commands.find((cmd) => cmd.name() === "version");
 
 		expect(versionCmd).toBeDefined();
-		expect(versionCmd?.description()).toBe("Show Expo SDK version");
+		expect(versionCmd?.description()).toBe("Show version information");
 	});
 
-	it("should output expoVersion when executed", async () => {
+	it("should output both CLI and Expo versions when executed", async () => {
 		const cliVersion = "0.1.0";
 		const expoVersion = "sdk-54";
 		versionCommand(program, cliVersion, expoVersion);
 
 		await program.parseAsync(["node", "test", "version"]);
 
-		expect(consoleLogSpy.mock.calls.length).toBe(1);
-		expect(consoleLogSpy.mock.calls[0][0]).toBe("sdk-54");
+		expect(consoleLogSpy.mock.calls.length).toBe(2);
+		expect(consoleLogSpy.mock.calls[0][0]).toBe("CLI Version:  0.1.0");
+		expect(consoleLogSpy.mock.calls[1][0]).toBe("Expo Version: sdk-54");
 	});
 
 	it("should output different expoVersion based on parameter", async () => {
@@ -48,8 +49,9 @@ describe("versionCommand", () => {
 
 		await program.parseAsync(["node", "test", "version"]);
 
-		expect(consoleLogSpy.mock.calls.length).toBe(1);
-		expect(consoleLogSpy.mock.calls[0][0]).toBe("sdk-53");
+		expect(consoleLogSpy.mock.calls.length).toBe(2);
+		expect(consoleLogSpy.mock.calls[0][0]).toBe("CLI Version:  0.1.0");
+		expect(consoleLogSpy.mock.calls[1][0]).toBe("Expo Version: sdk-53");
 	});
 
 	it("should handle main branch version", async () => {
@@ -59,8 +61,9 @@ describe("versionCommand", () => {
 
 		await program.parseAsync(["node", "test", "version"]);
 
-		expect(consoleLogSpy.mock.calls.length).toBe(1);
-		expect(consoleLogSpy.mock.calls[0][0]).toBe("main");
+		expect(consoleLogSpy.mock.calls.length).toBe(2);
+		expect(consoleLogSpy.mock.calls[0][0]).toBe("CLI Version:  0.1.0");
+		expect(consoleLogSpy.mock.calls[1][0]).toBe("Expo Version: main");
 	});
 
 	it("should not call console.error on successful execution", async () => {
@@ -73,19 +76,16 @@ describe("versionCommand", () => {
 		expect(consoleErrorSpy.mock.calls.length).toBe(0);
 	});
 
-	it("should output only expoVersion (not cliVersion)", async () => {
+	it("should output both cliVersion and expoVersion", async () => {
 		const cliVersion = "1.2.3";
 		const expoVersion = "sdk-54";
 		versionCommand(program, cliVersion, expoVersion);
 
 		await program.parseAsync(["node", "test", "version"]);
 
-		expect(consoleLogSpy.mock.calls.length).toBe(1);
-		const output = consoleLogSpy.mock.calls[0][0];
-
-		// Should only output expoVersion
-		expect(output).toBe("sdk-54");
-		expect(output).not.toContain("1.2.3");
+		expect(consoleLogSpy.mock.calls.length).toBe(2);
+		expect(consoleLogSpy.mock.calls[0][0]).toBe("CLI Version:  1.2.3");
+		expect(consoleLogSpy.mock.calls[1][0]).toBe("Expo Version: sdk-54");
 	});
 
 	it("should work with custom version string format", async () => {
@@ -95,8 +95,9 @@ describe("versionCommand", () => {
 
 		await program.parseAsync(["node", "test", "version"]);
 
-		expect(consoleLogSpy.mock.calls.length).toBe(1);
-		expect(consoleLogSpy.mock.calls[0][0]).toBe("sdk-52.0.0");
+		expect(consoleLogSpy.mock.calls.length).toBe(2);
+		expect(consoleLogSpy.mock.calls[0][0]).toBe("CLI Version:  0.1.0");
+		expect(consoleLogSpy.mock.calls[1][0]).toBe("Expo Version: sdk-52.0.0");
 	});
 
 	it("should be invocable multiple times", async () => {
@@ -106,26 +107,31 @@ describe("versionCommand", () => {
 
 		// First invocation
 		await program.parseAsync(["node", "test", "version"]);
-		expect(consoleLogSpy.mock.calls.length).toBe(1);
-		expect(consoleLogSpy.mock.calls[0][0]).toBe("sdk-54");
+		expect(consoleLogSpy.mock.calls.length).toBe(2);
+		expect(consoleLogSpy.mock.calls[0][0]).toBe("CLI Version:  0.1.0");
+		expect(consoleLogSpy.mock.calls[1][0]).toBe("Expo Version: sdk-54");
 
 		// Reset spy
 		consoleLogSpy.mockClear();
 
 		// Second invocation
 		await program.parseAsync(["node", "test", "version"]);
-		expect(consoleLogSpy.mock.calls.length).toBe(1);
-		expect(consoleLogSpy.mock.calls[0][0]).toBe("sdk-54");
+		expect(consoleLogSpy.mock.calls.length).toBe(2);
+		expect(consoleLogSpy.mock.calls[0][0]).toBe("CLI Version:  0.1.0");
+		expect(consoleLogSpy.mock.calls[1][0]).toBe("Expo Version: sdk-54");
 	});
 
-	it("should output 'latest' when expoVersion is null", async () => {
+	it("should output 'latest (not detected)' when expoVersion is null", async () => {
 		const cliVersion = "0.1.0";
 		const expoVersion = null;
 		versionCommand(program, cliVersion, expoVersion);
 
 		await program.parseAsync(["node", "test", "version"]);
 
-		expect(consoleLogSpy.mock.calls.length).toBe(1);
-		expect(consoleLogSpy.mock.calls[0][0]).toBe("latest");
+		expect(consoleLogSpy.mock.calls.length).toBe(2);
+		expect(consoleLogSpy.mock.calls[0][0]).toBe("CLI Version:  0.1.0");
+		expect(consoleLogSpy.mock.calls[1][0]).toBe(
+			"Expo Version: latest (not detected)",
+		);
 	});
 });

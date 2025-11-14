@@ -1,6 +1,6 @@
 {
 	"name": "expo-agent-core",
-	"version": "0.3.0",
+	"version": "0.5.0",
 	"description": "Core utilities and parsers for Expo documentation",
 	"type": "module",
 	"main": "./dist/index.js",
