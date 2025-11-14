@@ -1,5 +1,19 @@
 # expo-agent-cli
 
+## 0.5.0
+
+### Minor Changes
+
+- Improve Expo version detection to support monorepos and dependency hoisting
+- Update version command to display both CLI and Expo SDK versions
+- Change fallback branch from "latest" to "main" when Expo is not detected
+
+## 0.4.0
+
+### Minor Changes
+
+- Detect Expo Version
+
 ## 0.3.0
 
 ### Minor Changes

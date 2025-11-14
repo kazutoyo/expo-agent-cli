@@ -1,5 +1,27 @@
 # expo-agent-search
 
+## 0.5.0
+
+### Minor Changes
+
+- Update dependencies to align with CLI version
+
+### Patch Changes
+
+- Updated dependencies
+  - expo-agent-core@0.5.0
+
+## 0.4.0
+
+### Minor Changes
+
+- Detect Expo Version
+
+### Patch Changes
+
+- Updated dependencies
+  - expo-agent-core@0.4.0
+
 ## 0.2.0
 
 ### Minor Changes

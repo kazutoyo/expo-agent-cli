@@ -35,10 +35,10 @@ describe("constants", () => {
 			);
 		});
 
-		test("maps latest to detected Expo version or latest branch", () => {
+		test("maps latest to detected Expo version or main branch", () => {
 			const url = getExpoDocsBaseUrl("latest");
 			const expoVersion = getVersionInfo().expoVersion;
-			const expectedBranch = expoVersion || "latest";
+			const expectedBranch = expoVersion || "main";
 			expect(url).toBe(
 				`https://raw.githubusercontent.com/expo/expo/refs/heads/${expectedBranch}/docs/pages`,
 			);
