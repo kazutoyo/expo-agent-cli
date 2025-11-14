@@ -130,6 +130,8 @@ describe("versionCommand", () => {
 
 		expect(consoleLogSpy.mock.calls.length).toBe(2);
 		expect(consoleLogSpy.mock.calls[0][0]).toBe("CLI Version:  0.1.0");
-		expect(consoleLogSpy.mock.calls[1][0]).toBe("Expo Version: latest (not detected)");
+		expect(consoleLogSpy.mock.calls[1][0]).toBe(
+			"Expo Version: latest (not detected)",
+		);
 	});
 });
