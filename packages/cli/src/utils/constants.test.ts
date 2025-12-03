@@ -168,20 +168,6 @@ describe("constants", () => {
 			expect(resolvedVersion).toBe("unversioned");
 		});
 
-		test("resolves next version by fetching app.json", async () => {
-			const { urls, resolvedVersion } = await getExpoDocsInfo(
-				"/versions/next/sdk/ui/",
-			);
-			// The URL should contain a version number fetched from app.json
-			expect(urls[0]).toMatch(
-				/^https:\/\/raw\.githubusercontent\.com\/expo\/expo\/refs\/heads\/main\/docs\/pages\/versions\/v\d+\.\d+\.\d+\/sdk\/ui\.mdx$/,
-			);
-			expect(urls[1]).toMatch(
-				/^https:\/\/raw\.githubusercontent\.com\/expo\/expo\/refs\/heads\/main\/docs\/pages\/versions\/v\d+\.\d+\.\d+\/sdk\/ui\/index\.mdx$/,
-			);
-			expect(resolvedVersion).toMatch(/^sdk-\d+$/);
-		});
-
 		test("handles guide paths with trailing slash", async () => {
 			const { urls } = await getExpoDocsInfo("/guides/overview/");
 			expect(urls).toContain(
@@ -223,10 +209,14 @@ describe("constants", () => {
 			const { urls, resolvedVersion } = await getExpoDocsInfo(
 				"/versions/latest/sdk/camera/",
 			);
-			expect(urls).toContain(
-				"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/versions/latest/sdk/camera.mdx",
+			// The URL should contain a version number fetched from app.json
+			expect(urls[0]).toMatch(
+				/^https:\/\/raw\.githubusercontent\.com\/expo\/expo\/refs\/heads\/main\/docs\/pages\/versions\/v\d+\.\d+\.\d+\/sdk\/camera\.mdx$/,
 			);
-			expect(resolvedVersion).toBe("latest");
+			expect(urls[1]).toMatch(
+				/^https:\/\/raw\.githubusercontent\.com\/expo\/expo\/refs\/heads\/main\/docs\/pages\/versions\/v\d+\.\d+\.\d+\/sdk\/camera\/index\.mdx$/,
+			);
+			expect(resolvedVersion).toMatch(/^sdk-\d+$/);
 		});
 
 		test("handles path without version (uses main branch)", async () => {
