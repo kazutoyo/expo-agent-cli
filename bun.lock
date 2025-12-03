@@ -18,23 +18,23 @@
     },
     "packages/cli": {
       "name": "expo-agent-cli",
-      "version": "0.5.0",
+      "version": "0.6.1",
       "bin": {
         "expo-agent-cli": "./dist/cli.js",
       },
       "dependencies": {
         "chalk": "^5.3.0",
         "commander": "^14.0.0",
-        "expo-agent-core": "workspace:*",
-        "expo-agent-search": "workspace:*",
       },
       "devDependencies": {
+        "expo-agent-core": "workspace:*",
+        "expo-agent-search": "workspace:*",
         "publint": "^0.2.8",
       },
     },
     "packages/core": {
       "name": "expo-agent-core",
-      "version": "0.5.0",
+      "version": "0.6.1",
       "dependencies": {
         "chalk": "^5.6.2",
       },
@@ -53,9 +53,9 @@
     },
     "packages/search": {
       "name": "expo-agent-search",
-      "version": "0.5.0",
+      "version": "0.6.1",
       "dependencies": {
-        "expo-agent-core": "workspace:*",
+        "expo-agent-core": "0.6.1",
         "flexsearch": "^0.8.212",
       },
     },

@@ -31,5 +31,14 @@
 		"flexsearch"
 	],
 	"author": "Kazutoyo Tokai <kazutoyo.jp@gmail.com> (https://github.com/kazutoyo)",
-	"license": "MIT"
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/kazutoyo/expo-agent-cli.git",
+		"directory": "packages/search"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org"
+	}
 }
