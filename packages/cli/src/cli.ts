@@ -11,7 +11,7 @@ program
 	.description("CLI tool for accessing Expo SDK documentation and search")
 	.version(getVersionInfo().version);
 // Register commands
-docsCommand(program, getVersionInfo().expoVersion);
+docsCommand(program);
 searchCommand(program);
 versionCommand(program, getVersionInfo().version, getVersionInfo().expoVersion);
 
