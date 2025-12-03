@@ -55,10 +55,7 @@ export const docsCommand = (program: Command) => {
 						return;
 					} catch (error) {
 						clearTimeout(timeoutId);
-						if (
-							error instanceof Error &&
-							error.name === "AbortError"
-						) {
+						if (error instanceof Error && error.name === "AbortError") {
 							throw new Error(
 								"Request timeout: Failed to fetch llms.txt after 10 seconds",
 							);
@@ -99,10 +96,7 @@ export const docsCommand = (program: Command) => {
 						);
 					} catch (error) {
 						clearTimeout(timeoutId);
-						if (
-							error instanceof Error &&
-							error.name === "AbortError"
-						) {
+						if (error instanceof Error && error.name === "AbortError") {
 							lastError = new Error(
 								`Request timeout: ${tryUrl} took more than 10 seconds`,
 							);
