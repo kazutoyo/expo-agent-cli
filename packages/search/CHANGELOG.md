@@ -1,5 +1,33 @@
 # expo-agent-search
 
+## 0.6.0
+
+### Minor Changes
+
+- Release v0.6.0 with improved documentation path resolution and error handling
+
+  ## New Features
+
+  - **Enhanced Path Resolution**: Improved documentation fetching with fallback mechanism (.mdx → /index.mdx)
+  - **Dynamic Version Resolution**: Support for "next" version paths that resolve to latest SDK version
+  - **Timeout Support**: All fetch requests now have 10-second timeout to prevent hanging
+  - **Better Error Handling**: MDX processing failures no longer crash the application
+
+  ## Improvements
+
+  - **Type Safety**: New `SdkVersion` type for better version string validation
+  - **Error Messages**: Show all attempted URLs when documentation is not found
+  - **Automatic Version Detection**: Removed --sdk-version option in favor of path-based detection
+
+  ## Documentation
+
+  - Updated README to reflect new branch strategy (main instead of sdk-54)
+
+### Patch Changes
+
+- Updated dependencies
+  - expo-agent-core@0.6.0
+
 ## 0.5.0
 
 ### Minor Changes

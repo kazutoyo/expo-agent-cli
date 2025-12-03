@@ -23,8 +23,8 @@
 	"dependencies": {
 		"chalk": "^5.3.0",
 		"commander": "^14.0.0",
-		"expo-agent-core": "workspace:*",
-		"expo-agent-search": "workspace:*"
+		"expo-agent-core": "0.6.0",
+		"expo-agent-search": "0.6.0"
 	},
 	"devDependencies": {
 		"publint": "^0.2.8"

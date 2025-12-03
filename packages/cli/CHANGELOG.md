@@ -23,6 +23,12 @@
 
   - Updated README to reflect new branch strategy (main instead of sdk-54)
 
+### Patch Changes
+
+- Updated dependencies
+  - expo-agent-core@0.6.0
+  - expo-agent-search@0.6.0
+
 ## 0.5.0
 
 ### Minor Changes
