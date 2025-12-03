@@ -1,6 +1,6 @@
 {
 	"name": "expo-agent-search",
-	"version": "0.6.0",
+	"version": "0.6.1",
 	"description": "Offline search engine for Expo documentation",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -21,7 +21,7 @@
 		"lint": "echo 'Linting handled by root'"
 	},
 	"dependencies": {
-		"expo-agent-core": "0.6.0",
+		"expo-agent-core": "0.6.1",
 		"flexsearch": "^0.8.212"
 	},
 	"keywords": [

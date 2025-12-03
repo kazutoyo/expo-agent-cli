@@ -1,6 +1,6 @@
 {
 	"name": "expo-agent-cli",
-	"version": "0.6.0",
+	"version": "0.6.1",
 	"description": "CLI tool for accessing Expo SDK documentation and search",
 	"type": "module",
 	"bin": {
@@ -23,8 +23,8 @@
 	"dependencies": {
 		"chalk": "^5.3.0",
 		"commander": "^14.0.0",
-		"expo-agent-core": "0.6.0",
-		"expo-agent-search": "0.6.0"
+		"expo-agent-core": "0.6.1",
+		"expo-agent-search": "0.6.1"
 	},
 	"devDependencies": {
 		"publint": "^0.2.8"

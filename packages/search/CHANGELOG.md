@@ -1,5 +1,13 @@
 # expo-agent-search
 
+## 0.6.1
+
+### Patch Changes
+
+- Bump version to 0.6.1 for republish (0.6.0 was unpublished)
+- Updated dependencies
+  - expo-agent-core@0.6.1
+
 ## 0.6.0
 
 ### Minor Changes
