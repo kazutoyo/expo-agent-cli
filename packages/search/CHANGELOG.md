@@ -1,5 +1,13 @@
 # expo-agent-search
 
+## 0.6.2
+
+### Patch Changes
+
+- fix deps
+- Updated dependencies
+  - expo-agent-core@0.6.2
+
 ## 0.6.1
 
 ### Patch Changes

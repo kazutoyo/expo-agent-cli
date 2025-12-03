@@ -1,5 +1,11 @@
 # expo-agent-core
 
+## 0.6.2
+
+### Patch Changes
+
+- fix deps
+
 ## 0.6.1
 
 ### Patch Changes
