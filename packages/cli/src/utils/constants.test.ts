@@ -143,7 +143,9 @@ describe("constants", () => {
 		});
 
 		test("handles versioned SDK paths with trailing slash", async () => {
-			const { urls, resolvedVersion } = await getExpoDocsInfo("/versions/v54.0.0/sdk/ui/");
+			const { urls, resolvedVersion } = await getExpoDocsInfo(
+				"/versions/v54.0.0/sdk/ui/",
+			);
 			expect(urls).toContain(
 				"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/versions/v54.0.0/sdk/ui.mdx",
 			);
@@ -154,7 +156,9 @@ describe("constants", () => {
 		});
 
 		test("handles unversioned SDK paths with trailing slash", async () => {
-			const { urls, resolvedVersion } = await getExpoDocsInfo("/versions/unversioned/sdk/ui/");
+			const { urls, resolvedVersion } = await getExpoDocsInfo(
+				"/versions/unversioned/sdk/ui/",
+			);
 			expect(urls).toContain(
 				"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/versions/unversioned/sdk/ui.mdx",
 			);
@@ -165,7 +169,9 @@ describe("constants", () => {
 		});
 
 		test("resolves next version by fetching app.json", async () => {
-			const { urls, resolvedVersion } = await getExpoDocsInfo("/versions/next/sdk/ui/");
+			const { urls, resolvedVersion } = await getExpoDocsInfo(
+				"/versions/next/sdk/ui/",
+			);
 			// The URL should contain a version number fetched from app.json
 			expect(urls[0]).toMatch(
 				/^https:\/\/raw\.githubusercontent\.com\/expo\/expo\/refs\/heads\/main\/docs\/pages\/versions\/v\d+\.\d+\.\d+\/sdk\/ui\.mdx$/,
@@ -184,7 +190,9 @@ describe("constants", () => {
 		});
 
 		test("handles config paths with trailing slash", async () => {
-			const { urls, resolvedVersion } = await getExpoDocsInfo("/versions/v54.0.0/config/app/");
+			const { urls, resolvedVersion } = await getExpoDocsInfo(
+				"/versions/v54.0.0/config/app/",
+			);
 			expect(urls).toContain(
 				"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/versions/v54.0.0/config/app.mdx",
 			);
@@ -192,7 +200,9 @@ describe("constants", () => {
 		});
 
 		test("extracts version from path and uses it", async () => {
-			const { urls, resolvedVersion } = await getExpoDocsInfo("/versions/v54.0.0/sdk/calendar/");
+			const { urls, resolvedVersion } = await getExpoDocsInfo(
+				"/versions/v54.0.0/sdk/calendar/",
+			);
 			expect(urls).toContain(
 				"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/versions/v54.0.0/sdk/calendar.mdx",
 			);
@@ -200,7 +210,9 @@ describe("constants", () => {
 		});
 
 		test("handles path with version v53", async () => {
-			const { urls, resolvedVersion } = await getExpoDocsInfo("/versions/v53.0.0/sdk/audio");
+			const { urls, resolvedVersion } = await getExpoDocsInfo(
+				"/versions/v53.0.0/sdk/audio",
+			);
 			expect(urls).toContain(
 				"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/versions/v53.0.0/sdk/audio.mdx",
 			);
@@ -208,7 +220,9 @@ describe("constants", () => {
 		});
 
 		test("replaces latest path segment with resolved version", async () => {
-			const { urls, resolvedVersion } = await getExpoDocsInfo("/versions/latest/sdk/camera/");
+			const { urls, resolvedVersion } = await getExpoDocsInfo(
+				"/versions/latest/sdk/camera/",
+			);
 			expect(urls).toContain(
 				"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/versions/latest/sdk/camera.mdx",
 			);
@@ -223,7 +237,9 @@ describe("constants", () => {
 		});
 
 		test("combines all normalization rules with version extraction", async () => {
-			const { urls, resolvedVersion } = await getExpoDocsInfo("versions/v55.0.0/sdk/camera.mdx/");
+			const { urls, resolvedVersion } = await getExpoDocsInfo(
+				"versions/v55.0.0/sdk/camera.mdx/",
+			);
 			expect(urls).toContain(
 				"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/versions/v55.0.0/sdk/camera.mdx",
 			);
