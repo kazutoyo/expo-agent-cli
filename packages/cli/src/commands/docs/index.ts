@@ -5,17 +5,13 @@ import {
 	processInstallSections,
 	processPermissionSections,
 } from "expo-agent-core";
-import { getExpoDocsUrl } from "../../utils/constants";
+import { getExpoDocsInfo } from "../../utils/constants";
 
 interface DocsOptions {
 	pretty?: boolean;
-	sdkVersion?: string;
 }
 
-export const docsCommand = (
-	program: Command,
-	defaultExpoVersion: string | null,
-) => {
+export const docsCommand = (program: Command) => {
 	program
 		.command("docs")
 		.description("Fetch Expo documentation in Markdown format")
@@ -25,13 +21,7 @@ export const docsCommand = (
 			"",
 		)
 		.option("-p, --pretty", "Display in human-readable format with colors")
-		.option(
-			"--sdk-version <version>",
-			"Expo SDK version branch (e.g., sdk-54, sdk-53)",
-		)
 		.action(async (pathArg: string, options: DocsOptions) => {
-			// Use provided version or default (fallback to "latest" if no expo installed)
-			const expoVersion = options.sdkVersion || defaultExpoVersion || "latest";
 			try {
 				let path = pathArg;
 
@@ -46,36 +36,131 @@ export const docsCommand = (
 				}
 
 				// Default to llms.txt if no path provided
-				let url: string;
 				if (!path) {
-					url = "https://docs.expo.dev/llms.txt";
-				} else {
-					url = getExpoDocsUrl(path, expoVersion);
+					const controller = new AbortController();
+					const timeoutId = setTimeout(() => controller.abort(), 10000);
+					try {
+						const llmResult = await fetch("https://docs.expo.dev/llms.txt", {
+							signal: controller.signal,
+						});
+						clearTimeout(timeoutId);
+
+						if (!llmResult.ok) {
+							throw new Error(
+								`Failed to fetch llms.txt: ${llmResult.statusText}`,
+							);
+						}
+
+						const content = await llmResult.text();
+						if (options.pretty) {
+							// Display with terminal formatting
+							console.log(formatMarkdownForTerminal(content));
+						} else {
+							// Output raw markdown (for piping/AI processing)
+							console.log(content);
+						}
+						return;
+					} catch (error) {
+						clearTimeout(timeoutId);
+						if (error instanceof Error && error.name === "AbortError") {
+							throw new Error(
+								"Request timeout: Failed to fetch llms.txt after 10 seconds",
+							);
+						}
+						throw error;
+					}
 				}
 
-				const response = await fetch(url);
+				let url = "";
+				let response: Response | null = null;
 
-				if (!response.ok) {
-					if (response.status === 404) {
+				// Get URLs and resolved version
+				const { urls, resolvedVersion } = await getExpoDocsInfo(path);
+				const expoVersion = resolvedVersion;
+
+				// Try each URL until one succeeds
+				let lastError: Error | null = null;
+				for (const tryUrl of urls) {
+					const controller = new AbortController();
+					const timeoutId = setTimeout(() => controller.abort(), 10000);
+					try {
+						const tryResponse = await fetch(tryUrl, {
+							signal: controller.signal,
+						});
+						clearTimeout(timeoutId);
+						if (tryResponse.ok) {
+							url = tryUrl;
+							response = tryResponse;
+							break;
+						}
+						if (tryResponse.status === 404) {
+							// Try next URL
+							continue;
+						}
+						// Non-404 error, throw
+						throw new Error(
+							`Failed to fetch documentation: ${tryResponse.statusText}`,
+						);
+					} catch (error) {
+						clearTimeout(timeoutId);
+						if (error instanceof Error && error.name === "AbortError") {
+							lastError = new Error(
+								`Request timeout: ${tryUrl} took more than 10 seconds`,
+							);
+						} else {
+							lastError =
+								error instanceof Error ? error : new Error(String(error));
+						}
+					}
+				}
+
+				// If no URL succeeded, show error
+				if (!response) {
+					console.error(`Documentation not found: ${path}`);
+					console.error(
+						`Tried URLs:\n${urls.map((u) => `  - ${u}`).join("\n")}`,
+					);
+					if (lastError) {
+						console.error(`Last error: ${lastError.message}`);
+					}
+					process.exit(1);
+				}
+
+				if (!response || !response.ok) {
+					if (response?.status === 404) {
 						console.error(`Documentation not found: ${path}`);
 						console.error(`URL: ${url}`);
 						process.exit(1);
 					}
 					throw new Error(
-						`Failed to fetch documentation: ${response.statusText}`,
+						`Failed to fetch documentation: ${
+							response?.statusText ?? "Unknown error"
+						}`,
 					);
 				}
 
 				let content = await response.text();
 
-				// Process InstallSection tags in MDX content
-				content = processInstallSections(content);
+				// Process MDX sections with error handling
+				// If processing fails, continue with original content
+				try {
+					// Process InstallSection tags in MDX content
+					content = processInstallSections(content);
 
-				// Process Permission tags in MDX content
-				content = await processPermissionSections(content);
+					// Process Permission tags in MDX content
+					content = await processPermissionSections(content);
 
-				// Process APISection tags in MDX content
-				content = await processApiSections(content, expoVersion);
+					// Process APISection tags in MDX content
+					content = await processApiSections(content, expoVersion);
+				} catch (error) {
+					// Log warning but continue with original content
+					if (process.env.DEBUG) {
+						console.warn(
+							"Warning: Failed to process some MDX sections:",
+							error instanceof Error ? error.message : error,
+						);
+					}
+				}
 
 				if (options.pretty) {
 					// Display with terminal formatting

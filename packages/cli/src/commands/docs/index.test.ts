@@ -19,8 +19,7 @@ describe("docsCommand", () => {
 
 	beforeEach(() => {
 		program = new Command();
-		const expoVersion = "sdk-54";
-		docsCommand(program, expoVersion);
+		docsCommand(program);
 
 		consoleLogMock = mock(() => {});
 		consoleErrorMock = mock(() => {});
@@ -84,7 +83,7 @@ describe("docsCommand", () => {
 
 		expect((globalThis.fetch as any).mock.calls.length).toBe(1);
 		expect((globalThis.fetch as any).mock.calls[0][0]).toBe(
-			"https://raw.githubusercontent.com/expo/expo/refs/heads/sdk-54/docs/pages/accounts/account-types.mdx",
+			"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/accounts/account-types.mdx",
 		);
 		expect(
 			consoleLogMock.mock.calls.some((call: any[]) => call[0] === mockContent),
@@ -109,7 +108,7 @@ describe("docsCommand", () => {
 
 		expect((globalThis.fetch as any).mock.calls.length).toBe(1);
 		expect((globalThis.fetch as any).mock.calls[0][0]).toBe(
-			"https://raw.githubusercontent.com/expo/expo/refs/heads/sdk-54/docs/pages/get-started/introduction.mdx",
+			"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/get-started/introduction.mdx",
 		);
 		expect(
 			consoleLogMock.mock.calls.some((call: any[]) => call[0] === mockContent),
@@ -128,7 +127,7 @@ describe("docsCommand", () => {
 
 		expect((globalThis.fetch as any).mock.calls.length).toBe(1);
 		expect((globalThis.fetch as any).mock.calls[0][0]).toBe(
-			"https://raw.githubusercontent.com/expo/expo/refs/heads/sdk-54/docs/pages/guides/routing.mdx",
+			"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/guides/routing.mdx",
 		);
 		expect(
 			consoleLogMock.mock.calls.some((call: any[]) => call[0] === mockContent),
@@ -224,7 +223,7 @@ describe("docsCommand", () => {
 
 		expect((globalThis.fetch as any).mock.calls.length).toBe(1);
 		expect((globalThis.fetch as any).mock.calls[0][0]).toBe(
-			"https://raw.githubusercontent.com/expo/expo/refs/heads/sdk-54/docs/pages/guides/camera.mdx",
+			"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/guides/camera.mdx",
 		);
 		expect(
 			consoleLogMock.mock.calls.some((call: any[]) => call[0] === mockContent),
@@ -253,7 +252,7 @@ describe("docsCommand", () => {
 
 		expect((globalThis.fetch as any).mock.calls.length).toBe(1);
 		expect((globalThis.fetch as any).mock.calls[0][0]).toBe(
-			"https://raw.githubusercontent.com/expo/expo/refs/heads/sdk-54/docs/pages/get-started/create-a-project.mdx",
+			"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/get-started/create-a-project.mdx",
 		);
 		expect(
 			consoleLogMock.mock.calls.some((call: any[]) => call[0] === mockContent),
@@ -281,5 +280,168 @@ describe("docsCommand", () => {
 		// The output should be formatted, not raw markdown
 		const output = consoleLogMock.mock.calls[0][0];
 		expect(typeof output).toBe("string");
+	});
+
+	it("should always use latest version", async () => {
+		const mockContent = "# Camera\n\nCamera API guide.";
+
+		(globalThis.fetch as any).mockResolvedValue({
+			ok: true,
+			text: () => Promise.resolve(mockContent),
+		} as Response);
+
+		await program.parseAsync(["node", "test", "docs", "/guides/camera"]);
+
+		expect((globalThis.fetch as any).mock.calls.length).toBe(1);
+		// Should always use latest
+		expect((globalThis.fetch as any).mock.calls[0][0]).toBe(
+			"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/guides/camera.mdx",
+		);
+		expect(
+			consoleLogMock.mock.calls.some((call: any[]) => call[0] === mockContent),
+		).toBe(true);
+	});
+
+	it("should fallback to index.mdx when directory path returns 404", async () => {
+		const mockContent = "# Expo UI\n\nUI components documentation.";
+		let callCount = 0;
+
+		// First call (direct .mdx) returns 404, second call (index.mdx) succeeds
+		(globalThis.fetch as any).mockImplementation(() => {
+			callCount++;
+			if (callCount === 1) {
+				return Promise.resolve({
+					ok: false,
+					status: 404,
+					statusText: "Not Found",
+				} as Response);
+			}
+			return Promise.resolve({
+				ok: true,
+				text: () => Promise.resolve(mockContent),
+			} as Response);
+		});
+
+		await program.parseAsync([
+			"node",
+			"test",
+			"docs",
+			"/versions/v54.0.0/sdk/ui/",
+		]);
+
+		// Should try two URLs: first .mdx, then /index.mdx
+		expect((globalThis.fetch as any).mock.calls.length).toBe(2);
+		expect((globalThis.fetch as any).mock.calls[0][0]).toBe(
+			"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/versions/v54.0.0/sdk/ui.mdx",
+		);
+		expect((globalThis.fetch as any).mock.calls[1][0]).toBe(
+			"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/versions/v54.0.0/sdk/ui/index.mdx",
+		);
+		expect(
+			consoleLogMock.mock.calls.some((call: any[]) => call[0] === mockContent),
+		).toBe(true);
+	});
+
+	it("should handle unversioned paths", async () => {
+		const mockContent = "# Unversioned UI\n\nLatest UI documentation.";
+
+		(globalThis.fetch as any).mockResolvedValue({
+			ok: true,
+			text: () => Promise.resolve(mockContent),
+		} as Response);
+
+		await program.parseAsync([
+			"node",
+			"test",
+			"docs",
+			"/versions/unversioned/sdk/camera",
+		]);
+
+		expect((globalThis.fetch as any).mock.calls.length).toBeGreaterThan(0);
+		expect((globalThis.fetch as any).mock.calls[0][0]).toBe(
+			"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/versions/unversioned/sdk/camera.mdx",
+		);
+		expect(
+			consoleLogMock.mock.calls.some((call: any[]) => call[0] === mockContent),
+		).toBe(true);
+	});
+
+	it("should resolve next version by fetching app.json and use it for processApiSections", async () => {
+		const mockContent = "# Next Version UI\n\nNext version documentation.";
+
+		(globalThis.fetch as any).mockImplementation((url: string) => {
+			// First call: fetch app.json (may be cached)
+			if (url.includes("app.json")) {
+				return Promise.resolve({
+					ok: true,
+					json: () =>
+						Promise.resolve({
+							expo: {
+								sdkVersion: "54.0.0",
+							},
+						}),
+				} as Response);
+			}
+			// Second call: fetch the documentation
+			return Promise.resolve({
+				ok: true,
+				text: () => Promise.resolve(mockContent),
+			} as Response);
+		});
+
+		await program.parseAsync([
+			"node",
+			"test",
+			"docs",
+			"/versions/next/sdk/camera",
+		]);
+
+		// Should resolve next to v54.0.0 and fetch the documentation
+		// Note: app.json may be cached, so we just check that the resolved path contains v54.0.0
+		const fetchCalls = (globalThis.fetch as any).mock.calls;
+		const hasResolvedPath = fetchCalls.some((call: string[]) =>
+			call[0]?.includes("v54.0.0"),
+		);
+		expect(hasResolvedPath).toBe(true);
+		expect(
+			consoleLogMock.mock.calls.some((call: any[]) => call[0] === mockContent),
+		).toBe(true);
+	});
+
+	it("should show all tried URLs when all fail", async () => {
+		(globalThis.fetch as any).mockResolvedValue({
+			ok: false,
+			status: 404,
+			statusText: "Not Found",
+		} as Response);
+
+		// Mock process.exit to prevent test from exiting
+		const originalExit = process.exit;
+		let exitCode: number | undefined;
+		process.exit = mock((code?: number) => {
+			exitCode = code;
+			throw new Error("process.exit called");
+		}) as any;
+
+		try {
+			await program.parseAsync([
+				"node",
+				"test",
+				"docs",
+				"/versions/v54.0.0/sdk/nonexistent/",
+			]);
+		} catch (_error) {
+			// Expected to throw due to process.exit
+		}
+
+		expect(
+			consoleErrorMock.mock.calls.some((call: any[]) =>
+				call[0].includes("Tried URLs:"),
+			),
+		).toBe(true);
+		expect(exitCode).toBe(1);
+
+		// Restore process.exit
+		process.exit = originalExit;
 	});
 });

@@ -141,7 +141,7 @@ bun install
 
 # Setup Expo documentation submodule (required for search index)
 git submodule add https://github.com/expo/expo.git expo-docs
-cd expo-docs && git checkout sdk-54 && cd ..
+cd expo-docs && git checkout main && cd ..
 
 # Build all packages
 bun run build
@@ -177,7 +177,7 @@ The search feature requires a prebuilt index. To build it:
    ```bash
    git submodule add https://github.com/expo/expo.git expo-docs
    cd expo-docs
-   git checkout sdk-54  # or your target SDK version
+   git checkout main  # Use main branch for latest documentation
    cd ..
    ```
 
