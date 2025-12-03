@@ -96,7 +96,7 @@ export const extractVersionFromPath = (path: string): SdkVersion => {
 	}
 
 	// Check for explicit "latest" in path
-	if (path.includes("/versions/latest/") || path.includes("latest")) {
+	if (path.includes("/versions/latest/")) {
 		return "latest";
 	}
 

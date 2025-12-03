@@ -44,6 +44,13 @@ export const docsCommand = (program: Command) => {
 							signal: controller.signal,
 						});
 						clearTimeout(timeoutId);
+
+						if (!llmResult.ok) {
+							throw new Error(
+								`Failed to fetch llms.txt: ${llmResult.statusText}`,
+							);
+						}
+
 						const content = await llmResult.text();
 						if (options.pretty) {
 							// Display with terminal formatting
