@@ -1,5 +1,13 @@
 # expo-agent-cli
 
+## 0.6.3
+
+### Patch Changes
+
+- fix: resolve /versions/latest/ path to actual SDK version
+
+  Fixed the docs command to resolve /versions/latest/ paths to the actual latest SDK version (e.g., v54.0.0) since /versions/latest/ directory doesn't exist on GitHub.
+
 ## 0.6.2
 
 ### Patch Changes
