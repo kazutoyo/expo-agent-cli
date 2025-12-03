@@ -71,15 +71,23 @@ export const normalizePath = (path: string): string => {
 };
 
 /**
+ * SDK version format
+ * - "latest": Latest stable version
+ * - "unversioned": Bleeding edge, unreleased version
+ * - "sdk-XX": Specific SDK version (e.g., sdk-54, sdk-53)
+ */
+export type SdkVersion = "latest" | "unversioned" | `sdk-${number}`;
+
+/**
  * Extract SDK version from path
  * @param path - Normalized path (e.g., "/versions/v54.0.0/sdk/calendar/", "/guides/apple-privacy/")
  * @returns SDK version string (e.g., "sdk-54") or "latest" if not found
  */
-export const extractVersionFromPath = (path: string): string => {
+export const extractVersionFromPath = (path: string): SdkVersion => {
 	// Match /versions/v{major}.{minor}.{patch}/ or /versions/v{major}/
 	const versionMatch = path.match(/\/versions\/v(\d+)(?:\.\d+\.\d+)?\//);
 	if (versionMatch?.[1]) {
-		return `sdk-${versionMatch[1]}`;
+		return `sdk-${versionMatch[1]}` as SdkVersion;
 	}
 
 	// Check for explicit "unversioned" in path
@@ -135,7 +143,7 @@ const resolveNextVersion = async (path: string): Promise<string> => {
 
 export type ExpoDocsInfo = {
 	urls: string[];
-	resolvedVersion: string;
+	resolvedVersion: SdkVersion;
 };
 
 /**

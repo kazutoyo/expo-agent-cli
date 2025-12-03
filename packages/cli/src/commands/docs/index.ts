@@ -37,16 +37,34 @@ export const docsCommand = (program: Command) => {
 
 				// Default to llms.txt if no path provided
 				if (!path) {
-					const llmResult = await fetch("https://docs.expo.dev/llms.txt");
-					const content = await llmResult.text();
-					if (options.pretty) {
-						// Display with terminal formatting
-						console.log(formatMarkdownForTerminal(content));
-					} else {
-						// Output raw markdown (for piping/AI processing)
-						console.log(content);
+					const controller = new AbortController();
+					const timeoutId = setTimeout(() => controller.abort(), 10000);
+					try {
+						const llmResult = await fetch("https://docs.expo.dev/llms.txt", {
+							signal: controller.signal,
+						});
+						clearTimeout(timeoutId);
+						const content = await llmResult.text();
+						if (options.pretty) {
+							// Display with terminal formatting
+							console.log(formatMarkdownForTerminal(content));
+						} else {
+							// Output raw markdown (for piping/AI processing)
+							console.log(content);
+						}
+						return;
+					} catch (error) {
+						clearTimeout(timeoutId);
+						if (
+							error instanceof Error &&
+							error.name === "AbortError"
+						) {
+							throw new Error(
+								"Request timeout: Failed to fetch llms.txt after 10 seconds",
+							);
+						}
+						throw error;
 					}
-					return;
 				}
 
 				let url = "";
@@ -59,8 +77,13 @@ export const docsCommand = (program: Command) => {
 				// Try each URL until one succeeds
 				let lastError: Error | null = null;
 				for (const tryUrl of urls) {
+					const controller = new AbortController();
+					const timeoutId = setTimeout(() => controller.abort(), 10000);
 					try {
-						const tryResponse = await fetch(tryUrl);
+						const tryResponse = await fetch(tryUrl, {
+							signal: controller.signal,
+						});
+						clearTimeout(timeoutId);
 						if (tryResponse.ok) {
 							url = tryUrl;
 							response = tryResponse;
@@ -75,8 +98,18 @@ export const docsCommand = (program: Command) => {
 							`Failed to fetch documentation: ${tryResponse.statusText}`,
 						);
 					} catch (error) {
-						lastError =
-							error instanceof Error ? error : new Error(String(error));
+						clearTimeout(timeoutId);
+						if (
+							error instanceof Error &&
+							error.name === "AbortError"
+						) {
+							lastError = new Error(
+								`Request timeout: ${tryUrl} took more than 10 seconds`,
+							);
+						} else {
+							lastError =
+								error instanceof Error ? error : new Error(String(error));
+						}
 					}
 				}
 
@@ -107,14 +140,26 @@ export const docsCommand = (program: Command) => {
 
 				let content = await response.text();
 
-				// Process InstallSection tags in MDX content
-				content = processInstallSections(content);
+				// Process MDX sections with error handling
+				// If processing fails, continue with original content
+				try {
+					// Process InstallSection tags in MDX content
+					content = processInstallSections(content);
 
-				// Process Permission tags in MDX content
-				content = await processPermissionSections(content);
+					// Process Permission tags in MDX content
+					content = await processPermissionSections(content);
 
-				// Process APISection tags in MDX content
-				content = await processApiSections(content, expoVersion);
+					// Process APISection tags in MDX content
+					content = await processApiSections(content, expoVersion);
+				} catch (error) {
+					// Log warning but continue with original content
+					if (process.env.DEBUG) {
+						console.warn(
+							"Warning: Failed to process some MDX sections:",
+							error instanceof Error ? error.message : error,
+						);
+					}
+				}
 
 				if (options.pretty) {
 					// Display with terminal formatting
