@@ -128,17 +128,17 @@ const fetchLatestSdkVersion = async (): Promise<string> => {
 };
 
 /**
- * Resolve path with "next" version to actual version
- * @param path - Path that may contain "next" version
+ * Resolve path with "latest" version to actual version
+ * @param path - Path that may contain "latest" version
  * @returns Resolved path with actual version
  */
-const resolveNextVersion = async (path: string): Promise<string> => {
-	if (!path.includes("/versions/next/")) {
+const resolveLatestVersion = async (path: string): Promise<string> => {
+	if (!path.includes("/versions/latest/")) {
 		return path;
 	}
 
 	const sdkVersion = await fetchLatestSdkVersion();
-	return path.replace("/versions/next/", `/versions/v${sdkVersion}/`);
+	return path.replace("/versions/latest/", `/versions/v${sdkVersion}/`);
 };
 
 export type ExpoDocsInfo = {
@@ -155,7 +155,7 @@ export type ExpoDocsInfo = {
  */
 export async function getExpoDocsInfo(path: string): Promise<ExpoDocsInfo> {
 	const normalizedPath = normalizePath(path);
-	const resolvedPath = await resolveNextVersion(normalizedPath);
+	const resolvedPath = await resolveLatestVersion(normalizedPath);
 
 	const baseUrl =
 		"https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages";

@@ -366,8 +366,8 @@ describe("docsCommand", () => {
 		).toBe(true);
 	});
 
-	it("should resolve next version by fetching app.json and use it for processApiSections", async () => {
-		const mockContent = "# Next Version UI\n\nNext version documentation.";
+	it("should resolve latest version by fetching app.json and use it for processApiSections", async () => {
+		const mockContent = "# Latest Version UI\n\nLatest version documentation.";
 
 		(globalThis.fetch as any).mockImplementation((url: string) => {
 			// First call: fetch app.json (may be cached)
@@ -393,10 +393,10 @@ describe("docsCommand", () => {
 			"node",
 			"test",
 			"docs",
-			"/versions/next/sdk/camera",
+			"/versions/latest/sdk/camera",
 		]);
 
-		// Should resolve next to v54.0.0 and fetch the documentation
+		// Should resolve latest to v54.0.0 and fetch the documentation
 		// Note: app.json may be cached, so we just check that the resolved path contains v54.0.0
 		const fetchCalls = (globalThis.fetch as any).mock.calls;
 		const hasResolvedPath = fetchCalls.some((call: string[]) =>
